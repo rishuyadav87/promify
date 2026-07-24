@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f3efe8; /* stone */
+  --foreground: #201d1a; /* ink */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
