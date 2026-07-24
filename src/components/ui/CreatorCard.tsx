@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Youtube } from "lucide-react";
+import { Instagram, Youtube } from "@/components/icons/BrandIcons";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 

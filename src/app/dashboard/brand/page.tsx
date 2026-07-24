@@ -2,17 +2,19 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Megaphone } from "lucide-react";
-
+import { redirect } from "next/navigation";
 export default async function BrandDashboardPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+if (!user) {
+  redirect("/login");
+}
   const { data: brand } = await supabase
     .from("brands")
     .select("company_name, created_at")
-    .eq("user_id", user?.id)
+    .eq("user_id", user.id)
     .single();
 
   // RLS on `campaigns` restricts rows to campaigns owned by this brand.

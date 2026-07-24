@@ -2,16 +2,22 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Megaphone } from "lucide-react";
+import { redirect } from "next/navigation";
+
 export default async function CreatorDashboardPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/login");
+  }
+
   const { data: creator } = await supabase
     .from("creators")
     .select("display_name, platform, handle, follower_count, tier, niche")
-    .eq("user_id", user?.id)
+    .eq("user_id", user.id)
     .single();
   // No need to filter by user_id in the query — the RLS policy on
   // `campaigns` already restricts rows to this creator's own campaigns.
