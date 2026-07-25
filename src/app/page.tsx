@@ -11,7 +11,7 @@ export default async function HomePage() {
     <>
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
         <span className="text-lg font-semibold tracking-tight text-ink">
-          Creator Marketplace
+          Promify
         </span>
         <div className="flex items-center gap-3">
           {user ? (

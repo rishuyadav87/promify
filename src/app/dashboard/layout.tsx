@@ -25,7 +25,7 @@ export default async function DashboardLayout({
             href="/"
             className="text-lg font-semibold tracking-tight text-ink"
           >
-            Creator Marketplace
+            Promify
           </Link>
           <form action="/api/auth/signout" method="post">
             <Button type="submit" variant="outline">
