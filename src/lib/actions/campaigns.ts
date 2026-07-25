@@ -55,7 +55,7 @@ export async function counterOffer(
     return { error: "Enter a valid amount." };
 
   const resolved = await resolveParty(campaignId);
-  if ("error" in resolved) return { error: resolved.error };
+  if ("error" in resolved) return { error: resolved.error ?? null };
   const { supabase, campaign, party } = resolved;
 
   if (campaign.status !== "pending")
@@ -80,7 +80,7 @@ export async function acceptOffer(
   const amount = Number(formData.get("amount"));
 
   const resolved = await resolveParty(campaignId);
-  if ("error" in resolved) return { error: resolved.error };
+  if ("error" in resolved) return { error: resolved.error ?? null };
   const { supabase, campaign, party } = resolved;
 
   if (campaign.status !== "pending")
@@ -115,7 +115,7 @@ export async function declineCampaign(
   const campaignId = formData.get("campaign_id") as string;
 
   const resolved = await resolveParty(campaignId);
-  if ("error" in resolved) return { error: resolved.error };
+  if ("error" in resolved) return { error: resolved.error ?? null };
   const { supabase, campaign } = resolved;
 
   if (campaign.status !== "pending")

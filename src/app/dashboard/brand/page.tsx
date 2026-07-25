@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 export default async function BrandDashboardPage({
   searchParams,
 }: {
@@ -74,15 +75,16 @@ export default async function BrandDashboardPage({
 
       <ul className="flex flex-col gap-3">
         {campaigns?.map((c) => (
-          <li
-            key={c.id}
-            className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between"
-            href={`/dashboard/brand/campaigns/${c.id}`}
-          >
-            <span className="text-sm font-medium capitalize text-ink">
-              {c.status.replace("_", " ")}
-            </span>
-            <span className="text-sm text-warmgray">₹{c.price}</span>
+          <li key={c.id}>
+            <Link
+              href={`/dashboard/brand/campaigns/${c.id}`}
+              className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+            >
+              <span className="text-sm font-medium capitalize text-ink">
+                {c.status.replace("_", " ")}
+              </span>
+              <span className="text-sm text-warmgray">₹{c.price}</span>
+            </Link>
           </li>
         ))}
       </ul>

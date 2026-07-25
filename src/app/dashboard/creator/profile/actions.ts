@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
+import type { Database } from "@/lib/types/database.types";
 type ActionState = { error: string | null };
 
 export async function updateCreatorProfile(
@@ -21,7 +21,10 @@ export async function updateCreatorProfile(
   const oauthConnected = formData.get("oauth_connected") === "true";
 
   if (!displayName) return { error: "Display name can't be empty." };
-  const update: Record<string, unknown> = { display_name: displayName, niche };
+  const update: Database["public"]["Tables"]["creators"]["Update"] = {
+    display_name: displayName,
+    niche,
+  };
   const customPriceRaw = (formData.get("custom_price") as string)?.trim();
   if (customPriceRaw) {
     const customPrice = Number(customPriceRaw);

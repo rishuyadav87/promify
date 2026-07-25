@@ -72,7 +72,7 @@ export default async function CreatorDetailPage({
         <div className="grid grid-cols-2 gap-6 border-t border-ink/10 pt-6 sm:grid-cols-3">
           <div>
             <p className="text-xl font-semibold text-ink">
-              {creator.follower_count.toLocaleString()!}
+              {creator.follower_count!.toLocaleString()}
             </p>
             <p className="text-xs uppercase tracking-wide text-warmgray">
               Followers
@@ -106,10 +106,22 @@ export default async function CreatorDetailPage({
           price={
             hasCustomPrice
               ? creator.custom_price!
-              : Math.round((band!.low + band!.high) / 2)
+              : Math.round(
+                  ((band as { low: number; high: number }).low +
+                    (band as { low: number; high: number }).high) /
+                    2,
+                )
           }
-          low={hasCustomPrice ? creator.custom_price! : band!.low}
-          high={hasCustomPrice ? creator.custom_price! : band!.high}
+          low={
+            hasCustomPrice
+              ? creator.custom_price!
+              : (band as { low: number; high: number }).low
+          }
+          high={
+            hasCustomPrice
+              ? creator.custom_price!
+              : (band as { low: number; high: number }).high
+          }
         />
       ) : (
         <Card>

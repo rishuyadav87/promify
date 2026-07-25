@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 export default async function CreatorDashboardPage() {
   const supabase = createClient();
   const {

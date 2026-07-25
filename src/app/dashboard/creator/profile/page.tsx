@@ -1,20 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
 import { EditProfileForm } from "@/components/creators/EditProfileForm";
 import { AddPlatformForm } from "@/components/creators/AddPlatformForm";
-
+import { redirect } from "next/navigation";
 export default async function CreatorProfilePage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+  if (!user) {
+    redirect("/login");
+  }
   const { data: profiles } = await supabase
     .from("creators")
     .select(
       "id, display_name, platform, handle, follower_count, niche, oauth_connected, custom_price",
     )
 
-    .eq("user_id", user?.id)
+    .eq("user_id", user.id)
     .order("platform");
 
   const connectedPlatforms = (profiles ?? []).map((p) => p.platform);
