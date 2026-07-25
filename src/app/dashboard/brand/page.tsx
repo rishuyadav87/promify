@@ -3,14 +3,18 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
-export default async function BrandDashboardPage() {
+export default async function BrandDashboardPage({
+  searchParams,
+}: {
+  searchParams: { booked?: string };
+}) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-if (!user) {
-  redirect("/login");
-}
+  if (!user) {
+    redirect("/login");
+  }
   const { data: brand } = await supabase
     .from("brands")
     .select("company_name, created_at")
@@ -25,6 +29,13 @@ if (!user) {
 
   return (
     <div className="flex flex-col gap-8">
+      {searchParams.booked && (
+        <Card className="border-teal/30 bg-teal-subtle">
+          <p className="text-sm font-medium text-teal">
+            Booking sent! The creator will be notified to accept or decline.
+          </p>
+        </Card>
+      )}
       <Card className="flex flex-col gap-2">
         <h2 className="text-xl font-semibold text-ink">
           {brand?.company_name ?? "Your company"}
@@ -66,6 +77,7 @@ if (!user) {
           <li
             key={c.id}
             className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between"
+            href={`/dashboard/brand/campaigns/${c.id}`}
           >
             <span className="text-sm font-medium capitalize text-ink">
               {c.status.replace("_", " ")}

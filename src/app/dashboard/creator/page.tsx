@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
-
+import { Button } from "@/components/ui/Button";
 export default async function CreatorDashboardPage() {
   const supabase = createClient();
   const {
@@ -58,7 +58,11 @@ export default async function CreatorDashboardPage() {
           </p>
         </div>
       </Card>
-
+      <div className="flex justify-end">
+        <Button href="/dashboard/creator/profile" variant="outline">
+          Edit profile
+        </Button>
+      </div>
       <h1 className="text-2xl font-semibold tracking-tight text-ink">
         Your campaigns
       </h1>
@@ -78,14 +82,16 @@ export default async function CreatorDashboardPage() {
 
       <ul className="flex flex-col gap-3">
         {campaigns?.map((c) => (
-          <li
-            key={c.id}
-            className="flex flex-col gap-1 rounded-md border border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <span className="text-sm font-medium capitalize">
-              {c.status.replace("_", " ")}
-            </span>
-            <span className="text-sm text-neutral-600">₹{c.price}</span>
+          <li key={c.id}>
+            <Link
+              href={`/dashboard/creator/campaigns/${c.id}`}
+              className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+            >
+              <span className="text-sm font-medium capitalize text-ink">
+                {c.status.replace("_", " ")}
+              </span>
+              <span className="text-sm text-warmgray">₹{c.price}</span>
+            </Link>
           </li>
         ))}
       </ul>

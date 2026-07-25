@@ -1,0 +1,50 @@
+import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
+
+export default async function BrandCampaignDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const supabase = createClient();
+
+  const { data: campaign, error } = await supabase
+    .from("campaigns")
+    .select(
+      "id, status, price, created_at, creators ( display_name, platform, handle )",
+    )
+    .eq("id", params.id)
+    .single();
+  if (error || !campaign) notFound();
+
+  const { data: offers } = await supabase
+    .from("campaign_offers")
+    .select("id, offered_by, amount, created_at")
+    .eq("campaign_id", params.id)
+    .order("created_at", { ascending: false });
+
+  const currentAmount = offers?.[0]?.amount ?? campaign.price;
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">
+          Campaign with {campaign.creators?.display_name ?? "a creator"}
+        </h1>
+        <p className="mt-1 text-sm text-warmgray">
+          {campaign.creators?.platform === "youtube" ? "YouTube" : "Instagram"}{" "}
+          · @{campaign.creators?.handle} · Started{" "}
+          {new Date(campaign.created_at).toLocaleDateString()}
+        </p>
+      </div>
+      <NegotiationPanel
+        campaignId={campaign.id}
+        status={campaign.status}
+        offers={offers ?? []}
+        currentAmount={currentAmount}
+        viewerParty="brand"
+      />
+    </div>
+  );
+}

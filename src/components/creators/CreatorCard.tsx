@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Youtube } from "@/components/icons/BrandIcons";
+import { Camera, Play } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 
@@ -14,7 +14,7 @@ export type CreatorProfile = {
 };
 
 export function CreatorCard({ creator }: { creator: CreatorProfile }) {
-  const PlatformIcon = creator.platform === "youtube" ? Youtube : Instagram;
+  const PlatformIcon = creator.platform === "youtube" ? Play : Camera;
 
   return (
     <Link href={`/dashboard/brand/browse/${creator.id}`} className="block">
