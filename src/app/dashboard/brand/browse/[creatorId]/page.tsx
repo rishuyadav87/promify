@@ -28,7 +28,7 @@ export default async function CreatorDetailPage({
     ? null
     : getPriceBand(
         creator.platform!,
-        creator.follower_count,
+        creator.follower_count!,
         creator.youtube_monetized,
       );
   const priceDisplay = hasCustomPrice
