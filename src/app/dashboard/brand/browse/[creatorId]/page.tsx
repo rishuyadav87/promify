@@ -29,7 +29,7 @@ export default async function CreatorDetailPage({
     : getPriceBand(
         creator.platform!,
         creator.follower_count!,
-        creator.youtube_monetized,
+        creator.youtube_monetized!,
       );
   const priceDisplay = hasCustomPrice
     ? `₹${creator.custom_price!.toLocaleString()}`
@@ -99,10 +99,10 @@ export default async function CreatorDetailPage({
 
       {hasCustomPrice || !band!.custom ? (
         <BookCreatorButton
-          creatorId={creator.id}
-          displayName={creator.display_name}
-          platform={creator.platform}
-          handle={creator.handle}
+          creatorId={creator.id!}
+          displayName={creator.display_name!}
+          platform={creator.platform!}
+          handle={creator.handle!}
           price={
             hasCustomPrice
               ? creator.custom_price!
