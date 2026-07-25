@@ -72,7 +72,7 @@ export default async function CreatorDetailPage({
         <div className="grid grid-cols-2 gap-6 border-t border-ink/10 pt-6 sm:grid-cols-3">
           <div>
             <p className="text-xl font-semibold text-ink">
-              {creator.follower_count.toLocaleString()}
+              {creator.follower_count.toLocaleString()!}
             </p>
             <p className="text-xs uppercase tracking-wide text-warmgray">
               Followers
