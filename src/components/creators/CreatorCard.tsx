@@ -41,7 +41,7 @@ export function CreatorCard({ creator }: { creator: CreatorProfile }) {
 
         <div className="mt-auto pt-2">
           <p className="text-lg font-semibold text-ink">
-            {creator.follower_count.toLocaleString()}
+            {creator.follower_count.toLocaleString("en-IN")}
           </p>
           <p className="text-xs uppercase tracking-wide text-warmgray">
             Followers

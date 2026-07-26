@@ -59,7 +59,9 @@ export function ContentSubmissionPanel({
           <>
             <p className="text-sm text-ink">
               Agreed price:{" "}
-              <span className="font-semibold">₹{price.toLocaleString()}</span>
+              <span className="font-semibold">
+                ₹{price.toLocaleString("en-IN")}
+              </span>
             </p>
             <p className="text-xs text-warmgray">
               Performance metrics and any refund calculation will show up here

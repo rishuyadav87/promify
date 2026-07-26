@@ -54,11 +54,11 @@ export function BookCreatorButton({
       </div>
       <div>
         <p className="text-2xl font-semibold text-ink">
-          ₹{price.toLocaleString()}
+          ₹{price.toLocaleString("en-IN")}
         </p>
         <p className="text-xs uppercase tracking-wide text-warmgray">
-          Proposed price · range ₹{low.toLocaleString()}–₹
-          {high.toLocaleString()}
+          Proposed price · range ₹{low.toLocaleString("en-IN")}–₹
+          {high.toLocaleString("en-IN")}
         </p>
       </div>
       {state.error && <p className="text-sm text-error">{state.error}</p>}

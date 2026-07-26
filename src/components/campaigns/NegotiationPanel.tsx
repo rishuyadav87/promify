@@ -89,7 +89,7 @@ export function NegotiationPanel({
           </Badge>
         </div>
         <p className="text-2xl font-semibold text-ink">
-          ₹{currentAmount.toLocaleString()}
+          ₹{currentAmount.toLocaleString("en-IN")}
         </p>
 
         {isPending && (
@@ -172,10 +172,10 @@ export function NegotiationPanel({
               >
                 <span className="text-ink">
                   {o.offered_by === viewerParty ? "You" : "They"} proposed ₹
-                  {o.amount.toLocaleString()}
+                  {o.amount.toLocaleString("en-IN")}
                 </span>
                 <span className="text-xs text-warmgray">
-                  {new Date(o.created_at).toLocaleDateString()}
+                  {new Date(o.created_at).toLocaleDateString("en-IN")}
                 </span>
               </li>
             ))}
