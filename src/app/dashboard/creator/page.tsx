@@ -17,11 +17,13 @@ export default async function CreatorDashboardPage() {
     redirect("/login");
   }
 
-  const { data: creator } = await supabase
+  const { data: creatorRows } = await supabase
     .from("creators")
     .select("display_name, platform, handle, follower_count, tier, niche")
     .eq("user_id", user.id)
-    .single();
+    .order("follower_count", { ascending: false });
+
+  const creator = creatorRows?.[0] ?? null;
   // No need to filter by user_id in the query — the RLS policy on
   // `campaigns` already restricts rows to this creator's own campaigns.
   const { data: campaigns, error } = await supabase
