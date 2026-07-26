@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
-
+import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
+import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
 export default async function BrandCampaignDetailPage({
   params,
 }: {
@@ -9,14 +10,19 @@ export default async function BrandCampaignDetailPage({
 }) {
   const supabase = createClient();
 
-  const { data: campaign, error } = await supabase
+  const { data: campaignRow, error } = await supabase
     .from("campaigns")
     .select(
-      "id, status, price, created_at, creators ( display_name, platform, handle )",
+      "id, status, price, post_url, measurement_window_ends_at, created_at, brands ( company_name ), creators ( display_name, platform, handle )",
     )
     .eq("id", params.id)
     .single();
-  if (error || !campaign) notFound();
+  if (error || !campaignRow) notFound();
+
+  const campaign = {
+    ...campaignRow,
+    status: await autoCompleteExpiredCampaign(supabase, campaignRow),
+  };
 
   const { data: offers } = await supabase
     .from("campaign_offers")
@@ -43,6 +49,14 @@ export default async function BrandCampaignDetailPage({
         status={campaign.status}
         offers={offers ?? []}
         currentAmount={currentAmount}
+        viewerParty="brand"
+      />
+      <ContentSubmissionPanel
+        campaignId={campaign.id}
+        status={campaign.status}
+        postUrl={campaign.post_url}
+        measurementWindowEndsAt={campaign.measurement_window_ends_at}
+        price={campaign.price}
         viewerParty="brand"
       />
     </div>

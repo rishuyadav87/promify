@@ -130,3 +130,48 @@ export async function declineCampaign(
   revalidateCampaign(campaignId);
   return { error: null };
 }
+export async function submitContent(
+  prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const campaignId = formData.get("campaign_id") as string;
+  const postUrl = (formData.get("post_url") as string)?.trim();
+
+  if (!postUrl) return { error: "Enter a post URL." };
+  try {
+    new URL(postUrl);
+  } catch {
+    return { error: "Enter a valid URL (including https://)." };
+  }
+
+  const resolved = await resolveParty(campaignId);
+  if ("error" in resolved) return { error: resolved.error ?? null };
+  const { supabase, campaign, party } = resolved;
+
+  if (party !== "creator") {
+    return { error: "Only the creator can submit content for this campaign." };
+  }
+  if (campaign.status !== "accepted") {
+    return {
+      error: "Content can only be submitted once the campaign is accepted.",
+    };
+  }
+
+  // Flat 48-hour window for now — no content_type stored yet to vary this by.
+  const measurementWindowEndsAt = new Date(
+    Date.now() + 48 * 60 * 60 * 1000,
+  ).toISOString();
+
+  const { error } = await supabase
+    .from("campaigns")
+    .update({
+      post_url: postUrl,
+      status: "content_submitted",
+      measurement_window_ends_at: measurementWindowEndsAt,
+    })
+    .eq("id", campaignId);
+  if (error) return { error: error.message };
+
+  revalidateCampaign(campaignId);
+  return { error: null };
+}

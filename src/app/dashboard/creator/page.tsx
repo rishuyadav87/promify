@@ -5,6 +5,8 @@ import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import { autoCompleteExpiredCampaigns } from "@/lib/campaignLifecycle";
+import { statusBadgeVariant } from "@/lib/campaignStatus";
 export default async function CreatorDashboardPage() {
   const supabase = createClient();
   const {
@@ -24,8 +26,13 @@ export default async function CreatorDashboardPage() {
   // `campaigns` already restricts rows to this creator's own campaigns.
   const { data: campaigns, error } = await supabase
     .from("campaigns")
-    .select("id, status, price, post_url, created_at")
+    .select(
+      "id, status, price, post_url, measurement_window_ends_at, created_at",
+    )
     .order("created_at", { ascending: false });
+  const liveCampaigns = campaigns
+    ? await autoCompleteExpiredCampaigns(supabase, campaigns)
+    : campaigns;
 
   return (
     <div className="flex flex-col gap-8">
@@ -82,15 +89,15 @@ export default async function CreatorDashboardPage() {
       )}
 
       <ul className="flex flex-col gap-3">
-        {campaigns?.map((c) => (
+        {liveCampaigns?.map((c) => (
           <li key={c.id}>
             <Link
               href={`/dashboard/creator/campaigns/${c.id}`}
               className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="text-sm font-medium capitalize text-ink">
+              <Badge variant={statusBadgeVariant(c.status)}>
                 {c.status.replace("_", " ")}
-              </span>
+              </Badge>
               <span className="text-sm text-warmgray">₹{c.price}</span>
             </Link>
           </li>

@@ -3,6 +3,9 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Megaphone } from "lucide-react";
 import { redirect } from "next/navigation";
+import { autoCompleteExpiredCampaigns } from "@/lib/campaignLifecycle";
+import { statusBadgeVariant } from "@/lib/campaignStatus";
+import { Badge } from "@/components/ui/Badge";
 import Link from "next/link";
 export default async function BrandDashboardPage({
   searchParams,
@@ -21,13 +24,16 @@ export default async function BrandDashboardPage({
     .select("company_name, created_at")
     .eq("user_id", user.id)
     .single();
-
   // RLS on `campaigns` restricts rows to campaigns owned by this brand.
   const { data: campaigns, error } = await supabase
     .from("campaigns")
-    .select("id, status, price, creator_id, created_at")
+    .select(
+      "id, status, price, post_url, measurement_window_ends_at, created_at",
+    )
     .order("created_at", { ascending: false });
-
+  const liveCampaigns = campaigns
+    ? await autoCompleteExpiredCampaigns(supabase, campaigns)
+    : campaigns;
   return (
     <div className="flex flex-col gap-8">
       {searchParams.booked && (
@@ -56,7 +62,9 @@ export default async function BrandDashboardPage({
         <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Your campaigns
         </h1>
-        <Button variant="primary">New campaign</Button>
+        <Button href="/dashboard/brand/browse" variant="primary">
+          Browse creators
+        </Button>
       </div>
 
       {error && <p className="text-sm text-error">{error.message}</p>}
@@ -74,15 +82,15 @@ export default async function BrandDashboardPage({
       )}
 
       <ul className="flex flex-col gap-3">
-        {campaigns?.map((c) => (
+        {liveCampaigns?.map((c) => (
           <li key={c.id}>
             <Link
               href={`/dashboard/brand/campaigns/${c.id}`}
               className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="text-sm font-medium capitalize text-ink">
+              <Badge variant={statusBadgeVariant(c.status)}>
                 {c.status.replace("_", " ")}
-              </span>
+              </Badge>
               <span className="text-sm text-warmgray">₹{c.price}</span>
             </Link>
           </li>
