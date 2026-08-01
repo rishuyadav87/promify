@@ -57,7 +57,11 @@ export default async function BrandDashboardPage({
             : "—"}
         </p>
       </Card>
-
+      <div className="flex justify-end">
+        <Button href="/dashboard/brand/profile" variant="outline">
+          Edit profile
+        </Button>
+      </div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Your campaigns
