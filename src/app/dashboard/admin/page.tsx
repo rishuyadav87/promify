@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { statusBadgeVariant } from "@/lib/campaignStatus";
@@ -23,10 +24,23 @@ type DisputeRow = {
   } | null;
 };
 
-
 export default async function AdminDashboardPage() {
   const supabase = createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: viewer } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (viewer?.role !== "admin") {
+    redirect("/dashboard");
+  }
   const [
     { data: campaigns, error: campaignsError },
     { data: disputes, error: disputesError },

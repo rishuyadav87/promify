@@ -62,6 +62,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
           name="oauth_connected"
           value={String(profile.oauth_connected)}
         />
+        <input type="hidden" name="platform" value={profile.platform} />
 
         <div className="flex flex-col gap-1.5">
           <label

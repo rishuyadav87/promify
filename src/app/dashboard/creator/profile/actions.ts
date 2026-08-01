@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/types/database.types";
+import { getEligibleTier } from "@/lib/pricing";
 type ActionState = { error: string | null };
 
 export async function updateCreatorProfile(
@@ -19,7 +20,7 @@ export async function updateCreatorProfile(
   const displayName = (formData.get("display_name") as string)?.trim();
   const niche = (formData.get("niche") as string)?.trim() || null;
   const oauthConnected = formData.get("oauth_connected") === "true";
-
+  const platform = formData.get("platform") as "instagram" | "youtube";
   if (!displayName) return { error: "Display name can't be empty." };
   const update: Database["public"]["Tables"]["creators"]["Update"] = {
     display_name: displayName,
@@ -45,6 +46,9 @@ export async function updateCreatorProfile(
     }
     update.handle = handle;
     update.follower_count = Math.round(followerCount);
+    // youtube_monetized isn't editable via any form yet, so this always
+    // computes against `false` for now — revisit once that field exists.
+    update.tier = getEligibleTier(platform, update.follower_count, false);
   }
 
   const { error } = await supabase
@@ -85,8 +89,11 @@ export async function addCreatorPlatform(
     handle,
     display_name: displayName,
     oauth_connected: false,
+    // New platform rows start at 0 followers, so this is always null —
+    // written explicitly so tier stays consistent with the eligibility
+    // logic rather than silently defaulting to whatever the DB does.
+    tier: getEligibleTier(platform as "instagram" | "youtube", 0, false),
   });
-
   if (error) return { error: error.message };
 
   revalidatePath("/dashboard/creator/profile");
