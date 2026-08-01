@@ -46,9 +46,17 @@ export async function updateCreatorProfile(
     }
     update.handle = handle;
     update.follower_count = Math.round(followerCount);
-    // youtube_monetized isn't editable via any form yet, so this always
-    // computes against `false` for now — revisit once that field exists.
-    update.tier = getEligibleTier(platform, update.follower_count, false);
+
+    const youtubeMonetized =
+      platform === "youtube" && formData.get("youtube_monetized") === "on";
+    if (platform === "youtube") {
+      update.youtube_monetized = youtubeMonetized;
+    }
+    update.tier = getEligibleTier(
+      platform,
+      update.follower_count,
+      youtubeMonetized,
+    );
   }
 
   const { error } = await supabase

@@ -62,19 +62,39 @@ export function BookCreatorButton({
         </p>
       </div>
       {state.error && <p className="text-sm text-error">{state.error}</p>}
-      <form action={formAction} className="flex gap-3">
+      <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="creator_id" value={creatorId} />
         <input type="hidden" name="price" value={price} />
         <input type="hidden" name="expected_range_low" value={low} />
         <input type="hidden" name="expected_range_high" value={high} />
-        <ConfirmButton />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setConfirming(false)}
-        >
-          Cancel
-        </Button>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="brief" className="text-sm font-medium text-ink">
+            Content brief (optional)
+          </label>
+          <textarea
+            id="brief"
+            name="brief"
+            rows={3}
+            placeholder="e.g. A 30-second Reel unboxing the product, casual tone, show the packaging clearly"
+            className="rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
+          />
+          <p className="text-xs text-warmgray">
+            Tell the creator what kind of content you're expecting — they'll see
+            this once they accept.
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          <ConfirmButton />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
     </Card>
   );

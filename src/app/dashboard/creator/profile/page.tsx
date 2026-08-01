@@ -13,7 +13,7 @@ export default async function CreatorProfilePage() {
   const { data: profiles } = await supabase
     .from("creators")
     .select(
-      "id, display_name, platform, handle, follower_count, niche, oauth_connected, custom_price",
+      "id, display_name, platform, handle, follower_count, niche, oauth_connected, custom_price, youtube_monetized",
     )
 
     .eq("user_id", user.id)

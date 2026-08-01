@@ -16,6 +16,7 @@ type Profile = {
   custom_price: number | null;
   niche: string | null;
   oauth_connected: boolean;
+  youtube_monetized: boolean;
 };
 
 const inputClasses =
@@ -142,6 +143,29 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
             </p>
           )}
         </div>
+        {profile.platform === "youtube" && (
+          <div className="flex flex-col gap-1.5">
+            <label className="flex items-center gap-2 text-sm font-medium text-ink">
+              <input
+                type="checkbox"
+                name="youtube_monetized"
+                defaultChecked={profile.youtube_monetized}
+                disabled={profile.oauth_connected}
+                className="h-4 w-4 rounded border-ink/20 text-teal focus:ring-teal/30"
+              />
+              This channel is monetized
+            </label>
+            <p className="text-xs text-warmgray">
+              Monetized channels get a +20% multiplier on their calculated price
+              band.
+            </p>
+            {profile.oauth_connected && (
+              <p className="text-xs text-warmgray">
+                Synced automatically from your connected account.
+              </p>
+            )}
+          </div>
+        )}
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor={`custom_price_${profile.id}`}

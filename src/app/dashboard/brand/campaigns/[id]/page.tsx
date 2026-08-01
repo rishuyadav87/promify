@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { Card } from "@/components/ui/Card";
 import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
 import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
 import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
@@ -10,13 +11,25 @@ export default async function BrandCampaignDetailPage({
 }) {
   const supabase = createClient();
 
-  const { data: campaignRow, error } = await supabase
+  type CampaignDetailRow = {
+    id: string;
+    status: string;
+    price: number;
+    post_url: string | null;
+    brief: string | null;
+    measurement_window_ends_at: string | null;
+    created_at: string;
+    brands: { company_name: string } | null;
+    creators: { display_name: string; platform: string; handle: string } | null;
+  };
+
+  const { data: campaignRow, error } = (await supabase
     .from("campaigns")
     .select(
-      "id, status, price, post_url, measurement_window_ends_at, created_at, brands ( company_name ), creators ( display_name, platform, handle )",
+      "id, status, price, post_url, brief, measurement_window_ends_at, created_at, brands ( company_name ), creators ( display_name, platform, handle )",
     )
     .eq("id", params.id)
-    .single();
+    .single()) as unknown as { data: CampaignDetailRow | null; error: any };
   if (error || !campaignRow) notFound();
 
   const campaign = {
@@ -41,9 +54,19 @@ export default async function BrandCampaignDetailPage({
         <p className="mt-1 text-sm text-warmgray">
           {campaign.creators?.platform === "youtube" ? "YouTube" : "Instagram"}{" "}
           · @{campaign.creators?.handle} · Started{" "}
-          {new Date(campaign.created_at).toLocaleDateString()}
+          {new Date(campaign.created_at).toLocaleDateString("en-IN")}
         </p>
       </div>
+      {campaign.brief && (
+        <Card className="flex flex-col gap-2">
+          <h2 className="text-base font-semibold text-ink">
+            Your content brief
+          </h2>
+          <p className="whitespace-pre-wrap text-sm text-warmgray">
+            {campaign.brief}
+          </p>
+        </Card>
+      )}
       <NegotiationPanel
         campaignId={campaign.id}
         status={campaign.status}

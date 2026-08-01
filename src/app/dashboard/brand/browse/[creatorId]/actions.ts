@@ -19,7 +19,7 @@ export async function bookCreator(
   const price = Number(formData.get("price"));
   const expectedLow = Number(formData.get("expected_range_low"));
   const expectedHigh = Number(formData.get("expected_range_high"));
-
+  const brief = (formData.get("brief") as string)?.trim() || null;
   if (!creatorId || !Number.isFinite(price) || price <= 0) {
     return { error: "Something went wrong preparing this booking." };
   }
@@ -38,7 +38,8 @@ export async function bookCreator(
     price: Math.round(price),
     expected_range_low: Math.round(expectedLow),
     expected_range_high: Math.round(expectedHigh),
-  });
+    brief,
+  } as never);
 
   if (error) return { error: error.message };
 

@@ -6,13 +6,14 @@ import { Badge } from "@/components/ui/Badge";
 
 type CreatorRow = {
   id: string;
+  user_id: string;
   display_name: string;
   platform: string;
   handle: string;
   follower_count: number;
   tier: string | null;
   niche: string | null;
-  oauth_connected: boolean;
+  youtube_monetized: boolean;
   users: { email: string } | null;
 };
 
@@ -31,15 +32,22 @@ export default async function AdminCreatorsPage() {
     .single();
   if (viewer?.role !== "admin") redirect("/dashboard");
 
-  const { data: creators, error } = (await supabase
+  const { data: rows, error } = (await supabase
     .from("creators")
     .select(
-      "id, display_name, platform, handle, follower_count, tier, niche, oauth_connected, users ( email )",
+      "id, user_id, display_name, platform, handle, follower_count, tier, niche, youtube_monetized, users ( email )",
     )
     .order("follower_count", { ascending: false })) as unknown as {
     data: CreatorRow[] | null;
     error: any;
   };
+
+  const grouped = new Map<string, CreatorRow[]>();
+  for (const row of rows ?? []) {
+    const existing = grouped.get(row.user_id) ?? [];
+    existing.push(row);
+    grouped.set(row.user_id, existing);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -54,37 +62,46 @@ export default async function AdminCreatorsPage() {
 
       {error && <p className="text-sm text-error">{error.message}</p>}
 
-      <ul className="flex flex-col gap-3">
-        {creators?.map((c) => (
-          <li key={c.id}>
-            <Card className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-ink">
-                    {c.display_name}
-                  </span>
-                  {c.tier && (
-                    <Badge variant={c.tier === "tier1" ? "brick" : "teal"}>
-                      {c.tier === "tier1" ? "Tier 1" : "Tier 2"}
-                    </Badge>
-                  )}
-                </div>
-                <span className="text-xs text-warmgray">
-                  {c.users?.email ?? "unknown email"}
+      <ul className="flex flex-col gap-4">
+        {Array.from(grouped.entries()).map(([userId, platforms]) => (
+          <li key={userId}>
+            <Card className="flex flex-col gap-3">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-medium text-ink">
+                  {platforms[0].display_name}
                 </span>
                 <span className="text-xs text-warmgray">
-                  {c.platform === "youtube" ? "YouTube" : "Instagram"} · @
-                  {c.handle} · {c.niche ?? "no niche set"}
+                  {platforms[0].users?.email ?? "unknown email"}
                 </span>
               </div>
-              <div className="text-left sm:text-right">
-                <p className="text-lg font-semibold text-ink">
-                  {c.follower_count.toLocaleString("en-IN")}
-                </p>
-                <p className="text-xs uppercase tracking-wide text-warmgray">
-                  Followers
-                </p>
-              </div>
+
+              <ul className="flex flex-col gap-2 border-t border-ink/10 pt-3">
+                {platforms.map((p) => (
+                  <li
+                    key={p.id}
+                    className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-ink">
+                        {p.platform === "youtube" ? "YouTube" : "Instagram"} · @
+                        {p.handle}
+                      </span>
+                      {p.tier && (
+                        <Badge variant={p.tier === "tier1" ? "brick" : "teal"}>
+                          {p.tier === "tier1" ? "Tier 1" : "Tier 2"}
+                        </Badge>
+                      )}
+                      {p.platform === "youtube" && p.youtube_monetized && (
+                        <Badge variant="neutral">Monetized</Badge>
+                      )}
+                    </div>
+                    <span className="text-xs text-warmgray">
+                      {p.follower_count.toLocaleString("en-IN")} followers ·{" "}
+                      {p.niche ?? "no niche set"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </li>
         ))}
