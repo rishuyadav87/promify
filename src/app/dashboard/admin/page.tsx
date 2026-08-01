@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { statusBadgeVariant } from "@/lib/campaignStatus";
+import Link from "next/link";
 type CampaignRow = {
   id: string;
   status: string;
@@ -79,12 +80,27 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Total campaigns", value: totalCampaigns ?? 0 },
-    { label: "Active campaigns", value: activeCampaigns ?? 0 },
-    { label: "Total creators", value: totalCreators ?? 0 },
-    { label: "Total brands", value: totalBrands ?? 0 },
+    {
+      label: "Total campaigns",
+      value: totalCampaigns ?? 0,
+      href: "/dashboard/admin/campaigns",
+    },
+    {
+      label: "Active campaigns",
+      value: activeCampaigns ?? 0,
+      href: "/dashboard/admin/campaigns?filter=active",
+    },
+    {
+      label: "Total creators",
+      value: totalCreators ?? 0,
+      href: "/dashboard/admin/creators",
+    },
+    {
+      label: "Total brands",
+      value: totalBrands ?? 0,
+      href: "/dashboard/admin/brands",
+    },
   ];
-
   return (
     <div className="flex flex-col gap-10">
       <div>
@@ -98,12 +114,14 @@ export default async function AdminDashboardPage() {
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map((s) => (
-          <Card key={s.label} className="flex flex-col gap-1">
-            <p className="text-2xl font-semibold text-ink">{s.value}</p>
-            <p className="text-xs uppercase tracking-wide text-warmgray">
-              {s.label}
-            </p>
-          </Card>
+          <Link key={s.label} href={s.href} className="block">
+            <Card className="flex flex-col gap-1 transition-shadow hover:shadow-md">
+              <p className="text-2xl font-semibold text-ink">{s.value}</p>
+              <p className="text-xs uppercase tracking-wide text-warmgray">
+                {s.label}
+              </p>
+            </Card>
+          </Link>
         ))}
       </div>
 
