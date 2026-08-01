@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { EditBrandProfileForm } from "@/components/brands/EditBrandProfileForm";
+import { EditBrandProfileForm } from "@/app/dashboard/brand/EditBrandProfileForm";
 
 export default async function BrandProfilePage() {
   const supabase = createClient();
