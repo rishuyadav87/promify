@@ -1,5 +1,6 @@
 "use client";
-
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import type { CreatorProfile } from "@/components/creators/CreatorCard";
 import { GroupedCreatorCard } from "@/components/creators/GroupedCreatorCard";
 type PlatformFilter = "all" | "instagram" | "youtube";
@@ -76,7 +77,7 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {grouped.map((platforms) => (
+          {grouped.map((platforms: CreatorProfile[]) => (
             <GroupedCreatorCard
               key={platforms[0].user_id}
               platforms={platforms}

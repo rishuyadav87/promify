@@ -66,12 +66,12 @@ export async function updateCreatorProfile(
     .eq("id", creatorId)
     .eq("user_id", user.id);
 
- if (error) return { error: error.message };
+  if (error) return { error: error.message };
 
   revalidatePath("/dashboard/creator/profile");
   revalidatePath("/dashboard/creator");
   redirect("/dashboard/creator");
-
+}
 export async function addCreatorPlatform(
   prevState: ActionState,
   formData: FormData,
