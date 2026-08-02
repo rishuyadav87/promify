@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/Button";
 
 export default async function DashboardLayout({
@@ -27,7 +28,7 @@ export default async function DashboardLayout({
           >
             Creo
           </Link>
-          <form action="/api/auth/signout" method="post">
+          <form action={signOut}>
             <Button type="submit" variant="outline">
               Log out
             </Button>
