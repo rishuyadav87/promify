@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/Badge";
 
 export type CreatorProfile = {
   id: string;
+  user_id: string;
   display_name: string;
   platform: "instagram" | "youtube";
   handle: string;

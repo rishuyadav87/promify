@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/types/database.types";
 import { getEligibleTier } from "@/lib/pricing";
+import { redirect } from "next/navigation";
 type ActionState = { error: string | null };
 
 export async function updateCreatorProfile(
@@ -65,12 +66,11 @@ export async function updateCreatorProfile(
     .eq("id", creatorId)
     .eq("user_id", user.id);
 
-  if (error) return { error: error.message };
+ if (error) return { error: error.message };
 
   revalidatePath("/dashboard/creator/profile");
   revalidatePath("/dashboard/creator");
-  return { error: null };
-}
+  redirect("/dashboard/creator");
 
 export async function addCreatorPlatform(
   prevState: ActionState,

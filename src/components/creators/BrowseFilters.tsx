@@ -1,12 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
-import {
-  CreatorCard,
-  type CreatorProfile,
-} from "@/components/creators/CreatorCard";
-
+import type { CreatorProfile } from "@/components/creators/CreatorCard";
+import { GroupedCreatorCard } from "@/components/creators/GroupedCreatorCard";
 type PlatformFilter = "all" | "instagram" | "youtube";
 type TierFilter = "all" | "tier1" | "tier2";
 
@@ -27,6 +22,15 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
       return true;
     });
   }, [creators, platform, tier, niche]);
+  const grouped = useMemo(() => {
+    const map = new Map<string, CreatorProfile[]>();
+    for (const c of filtered) {
+      const existing = map.get(c.user_id) ?? [];
+      existing.push(c);
+      map.set(c.user_id, existing);
+    }
+    return Array.from(map.values());
+  }, [filtered]);
 
   const selectClasses =
     "rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
@@ -66,14 +70,17 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
         </select>
       </div>
 
-      {filtered.length === 0 ? (
+      {grouped.length === 0 ? (
         <p className="text-sm text-warmgray">
           No creators match those filters.
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((creator) => (
-            <CreatorCard key={creator.id} creator={creator} />
+          {grouped.map((platforms) => (
+            <GroupedCreatorCard
+              key={platforms[0].user_id}
+              platforms={platforms}
+            />
           ))}
         </div>
       )}

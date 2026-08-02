@@ -7,7 +7,9 @@ export default async function BrowseCreatorsPage() {
 
   const { data: creators, error } = await supabase
     .from("public_creator_profiles")
-    .select("id, display_name, platform, handle, follower_count, tier, niche")
+    .select(
+      "id, user_id, display_name, platform, handle, follower_count, tier, niche",
+    )
     .order("follower_count", { ascending: false });
 
   return (
@@ -24,7 +26,9 @@ export default async function BrowseCreatorsPage() {
       {error && <p className="text-sm text-error">{error.message}</p>}
 
       {!error && (
-        <BrowseFilters creators={(creators as CreatorProfile[]) ?? []} />
+        <BrowseFilters
+          creators={(creators as unknown as CreatorProfile[]) ?? []}
+        />
       )}
     </div>
   );
