@@ -49,13 +49,13 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
         <h2 className="text-base font-semibold capitalize text-ink">
           {profile.platform}
         </h2>
-       {profile.oauth_connected ? (
+        {profile.oauth_connected ? (
           <Badge variant="teal">Connected</Badge>
         ) : (
           <Badge variant="neutral">Manual</Badge>
         )}
         {profile.platform === "youtube" && profile.oauth_connected && (
-          
+          <a
             href="/auth/connect/google"
             className="ml-auto text-xs font-medium text-teal hover:underline"
           >
