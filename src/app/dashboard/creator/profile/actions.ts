@@ -31,6 +31,19 @@ export async function updateCreatorProfile(
     niche,
   };
 
+  // profile_url isn't in database.types.ts yet (added by migration 0003,
+  // types not regenerated) — cast is a temporary workaround, remove once
+  // `npm run gen:types` has been run.
+  const profileUrlRaw = (formData.get("profile_url") as string)?.trim();
+  if (profileUrlRaw) {
+    try {
+      new URL(profileUrlRaw);
+    } catch {
+      return { error: "Profile link must be a valid URL." };
+    }
+  }
+  (update as Record<string, unknown>).profile_url = profileUrlRaw || null;
+
   const customPriceRaw = (formData.get("custom_price") as string)?.trim();
   if (customPriceRaw) {
     const customPrice = Number(customPriceRaw);

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Camera, Play } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import type { CreatorProfile } from "@/components/creators/CreatorCard";
 
 export function GroupedCreatorCard({
@@ -18,7 +18,6 @@ export function GroupedCreatorCard({
       </h3>
       <ul className="flex flex-col gap-2">
         {platforms.map((p) => {
-          const PlatformIcon = p.platform === "youtube" ? Play : Camera;
           return (
             <li key={p.id}>
               <Link
@@ -27,7 +26,7 @@ export function GroupedCreatorCard({
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-sm text-ink">
-                    <PlatformIcon className="h-4 w-4 text-warmgray" />
+                    <PlatformIcon platform={p.platform} className="h-4 w-4" />
                     <span>@{p.handle}</span>
                   </div>
                   {p.tier && (

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Camera, Play } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 
 export type CreatorProfile = {
   id: string;
@@ -15,8 +15,6 @@ export type CreatorProfile = {
 };
 
 export function CreatorCard({ creator }: { creator: CreatorProfile }) {
-  const PlatformIcon = creator.platform === "youtube" ? Play : Camera;
-
   return (
     <Link href={`/dashboard/brand/browse/${creator.id}`} className="block">
       <Card className="flex h-full flex-col gap-4 transition-shadow hover:shadow-md">
@@ -32,7 +30,7 @@ export function CreatorCard({ creator }: { creator: CreatorProfile }) {
         </div>
 
         <div className="flex items-center gap-1.5 text-sm text-warmgray">
-          <PlatformIcon className="h-4 w-4" />
+          <PlatformIcon platform={creator.platform} className="h-4 w-4" />
           <span>@{creator.handle}</span>
         </div>
 

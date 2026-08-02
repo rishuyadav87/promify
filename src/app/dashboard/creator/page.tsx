@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { autoCompleteExpiredCampaigns } from "@/lib/campaignLifecycle";
 import { statusBadgeVariant } from "@/lib/campaignStatus";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 export default async function CreatorDashboardPage() {
   const supabase = createClient();
   const {
@@ -50,7 +51,13 @@ export default async function CreatorDashboardPage() {
               </Badge>
             )}
           </div>
-          <p className="text-sm text-warmgray">
+          <p className="flex items-center gap-1.5 text-sm text-warmgray">
+            {creator && (
+              <PlatformIcon
+                platform={creator.platform}
+                className="h-3.5 w-3.5"
+              />
+            )}
             {creator?.platform === "youtube" ? "YouTube" : "Instagram"} · @
             {creator?.handle ?? "not set"}
           </p>

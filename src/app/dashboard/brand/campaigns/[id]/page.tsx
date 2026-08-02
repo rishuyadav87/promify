@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
 import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
 export default async function BrandCampaignDetailPage({
   params,
@@ -51,7 +52,13 @@ export default async function BrandCampaignDetailPage({
         <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Campaign with {campaign.creators?.display_name ?? "a creator"}
         </h1>
-        <p className="mt-1 text-sm text-warmgray">
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-warmgray">
+          {campaign.creators?.platform && (
+            <PlatformIcon
+              platform={campaign.creators.platform as "instagram" | "youtube"}
+              className="h-3.5 w-3.5"
+            />
+          )}
           {campaign.creators?.platform === "youtube" ? "YouTube" : "Instagram"}{" "}
           · @{campaign.creators?.handle} · Started{" "}
           {new Date(campaign.created_at).toLocaleDateString("en-IN")}

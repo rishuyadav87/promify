@@ -1,8 +1,8 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { Camera, Play } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { updateCreatorProfile } from "@/app/dashboard/creator/profile/actions";
@@ -17,6 +17,7 @@ type Profile = {
   niche: string | null;
   oauth_connected: boolean;
   youtube_monetized: boolean;
+  profile_url: string | null;
 };
 
 const inputClasses =
@@ -40,12 +41,11 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
   const [state, formAction] = useFormState(updateCreatorProfile, {
     error: null,
   });
-  const PlatformIcon = profile.platform === "youtube" ? Play : Camera;
 
   return (
     <Card className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <PlatformIcon className="h-4 w-4 text-warmgray" />
+        <PlatformIcon platform={profile.platform} className="h-4 w-4" />
         <h2 className="text-base font-semibold capitalize text-ink">
           {profile.platform}
         </h2>
@@ -166,6 +166,32 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
             )}
           </div>
         )}
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor={`profile_url_${profile.id}`}
+            className="text-sm font-medium text-ink"
+          >
+            {profile.platform === "youtube" ? "YouTube" : "Instagram"} profile
+            link
+          </label>
+          <input
+            id={`profile_url_${profile.id}`}
+            name="profile_url"
+            type="url"
+            defaultValue={profile.profile_url ?? ""}
+            placeholder={
+              profile.platform === "youtube"
+                ? "https://youtube.com/@yourchannel"
+                : "https://instagram.com/yourhandle"
+            }
+            className={inputClasses}
+          />
+          <p className="text-xs text-warmgray">
+            Shown to brands next to your platform icon so they can view your
+            profile directly.
+          </p>
+        </div>
+
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor={`custom_price_${profile.id}`}

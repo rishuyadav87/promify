@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { Camera, Play } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { getPriceBand } from "@/lib/pricing";
@@ -13,13 +13,29 @@ export default async function CreatorDetailPage({
 }) {
   const supabase = createClient();
 
-  const { data: creator, error } = await supabase
+  type CreatorDetailRow = {
+    id: string | null;
+    display_name: string | null;
+    platform: "instagram" | "youtube" | null;
+    handle: string | null;
+    follower_count: number | null;
+    tier: "tier1" | "tier2" | null;
+    niche: string | null;
+    youtube_monetized: boolean | null;
+    custom_price: number | null;
+    // profile_url isn't in database.types.ts yet (added by migration 0003,
+    // types not regenerated) — remove this cast once `npm run gen:types` has
+    // been run against the live database.
+    profile_url: string | null;
+  };
+
+  const { data: creator, error } = (await supabase
     .from("public_creator_profiles")
     .select(
-      "id, display_name, platform, handle, follower_count, tier, niche, youtube_monetized, custom_price",
+      "id, display_name, platform, handle, follower_count, tier, niche, youtube_monetized, custom_price, profile_url",
     )
     .eq("id", params.creatorId)
-    .single();
+    .single()) as unknown as { data: CreatorDetailRow | null; error: any };
 
   if (error || !creator) notFound();
 
@@ -43,7 +59,6 @@ export default async function CreatorDetailPage({
     : band!.custom
       ? band!.label
       : `${band!.label} price band`;
-  const PlatformIcon = creator.platform === "youtube" ? Play : Camera;
 
   return (
     <div className="flex flex-col gap-8">
@@ -54,8 +69,28 @@ export default async function CreatorDetailPage({
               {creator.display_name}
             </h1>
             <div className="mt-1 flex items-center gap-1.5 text-sm text-warmgray">
-              <PlatformIcon className="h-4 w-4" />
-              <span>@{creator.handle}</span>
+              {creator.profile_url ? (
+                <a
+                  href={creator.profile_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:underline"
+                >
+                  <PlatformIcon
+                    platform={creator.platform!}
+                    className="h-4 w-4"
+                  />
+                  <span>@{creator.handle}</span>
+                </a>
+              ) : (
+                <>
+                  <PlatformIcon
+                    platform={creator.platform!}
+                    className="h-4 w-4"
+                  />
+                  <span>@{creator.handle}</span>
+                </>
+              )}
             </div>
           </div>
           {creator.tier && (

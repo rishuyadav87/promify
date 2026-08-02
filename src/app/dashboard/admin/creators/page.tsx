@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { setCreatorApproval } from "./actions";
 
 type CreatorRow = {
@@ -90,7 +91,11 @@ export default async function AdminCreatorsPage() {
                   >
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm text-ink">
+                        <span className="flex items-center gap-1.5 text-sm text-ink">
+                          <PlatformIcon
+                            platform={p.platform as "instagram" | "youtube"}
+                            className="h-3.5 w-3.5"
+                          />
                           {p.platform === "youtube" ? "YouTube" : "Instagram"} ·
                           @{p.handle}
                         </span>
