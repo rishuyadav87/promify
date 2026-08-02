@@ -1,8 +1,10 @@
 "use client";
+
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import type { CreatorProfile } from "@/components/creators/CreatorCard";
 import { GroupedCreatorCard } from "@/components/creators/GroupedCreatorCard";
+
 type PlatformFilter = "all" | "instagram" | "youtube";
 type TierFilter = "all" | "tier1" | "tier2";
 
@@ -23,6 +25,7 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
       return true;
     });
   }, [creators, platform, tier, niche]);
+
   const grouped = useMemo(() => {
     const map = new Map<string, CreatorProfile[]>();
     for (const c of filtered) {
@@ -77,7 +80,7 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {grouped.map((platforms: CreatorProfile[]) => (
+          {grouped.map((platforms) => (
             <GroupedCreatorCard
               key={platforms[0].user_id}
               platforms={platforms}

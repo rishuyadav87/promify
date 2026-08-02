@@ -1,10 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/types/database.types";
 import { getEligibleTier } from "@/lib/pricing";
-import { redirect } from "next/navigation";
+
 type ActionState = { error: string | null };
 
 export async function updateCreatorProfile(
@@ -22,11 +23,14 @@ export async function updateCreatorProfile(
   const niche = (formData.get("niche") as string)?.trim() || null;
   const oauthConnected = formData.get("oauth_connected") === "true";
   const platform = formData.get("platform") as "instagram" | "youtube";
+
   if (!displayName) return { error: "Display name can't be empty." };
+
   const update: Database["public"]["Tables"]["creators"]["Update"] = {
     display_name: displayName,
     niche,
   };
+
   const customPriceRaw = (formData.get("custom_price") as string)?.trim();
   if (customPriceRaw) {
     const customPrice = Number(customPriceRaw);
@@ -72,6 +76,7 @@ export async function updateCreatorProfile(
   revalidatePath("/dashboard/creator");
   redirect("/dashboard/creator");
 }
+
 export async function addCreatorPlatform(
   prevState: ActionState,
   formData: FormData,
@@ -97,11 +102,9 @@ export async function addCreatorPlatform(
     handle,
     display_name: displayName,
     oauth_connected: false,
-    // New platform rows start at 0 followers, so this is always null —
-    // written explicitly so tier stays consistent with the eligibility
-    // logic rather than silently defaulting to whatever the DB does.
     tier: getEligibleTier(platform as "instagram" | "youtube", 0, false),
   });
+
   if (error) return { error: error.message };
 
   revalidatePath("/dashboard/creator/profile");
