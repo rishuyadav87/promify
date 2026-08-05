@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
@@ -14,6 +15,7 @@ export default async function HomePage() {
           Creo
         </span>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {user ? (
             <Button href="/dashboard" variant="primary">
               Dashboard

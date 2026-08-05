@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default async function DashboardLayout({
   children,
@@ -28,11 +29,14 @@ export default async function DashboardLayout({
           >
             Creo
           </Link>
-          <form action={signOut}>
-            <Button type="submit" variant="outline">
-              Log out
-            </Button>
-          </form>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <form action={signOut}>
+              <Button type="submit" variant="outline">
+                Log out
+              </Button>
+            </form>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">

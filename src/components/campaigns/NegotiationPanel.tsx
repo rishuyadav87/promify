@@ -147,7 +147,7 @@ export function NegotiationPanel({
                     min={1}
                     defaultValue={currentAmount}
                     required
-                    className="rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
+                    className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
                   />
                 </div>
                 <CounterButton />

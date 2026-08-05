@@ -5,29 +5,29 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
-      colors: {ink: "#201D1A",
-stone: "#F3EFE8",
-warmgray: "#8A8478",
-brick: {
-  DEFAULT: "#B5482F",
-  hover: "#9C3C27",
-  subtle: "#F5E4DE",
-},
-teal: {
-  DEFAULT: "#1B4A47",
-  hover: "#143735",
-  subtle: "#DCE8E7",
-},
-success: "#3D7A54",
-error: "#B0463A",
+      colors: {
+        ink: "rgb(var(--color-ink) / <alpha-value>)",
+        stone: "rgb(var(--color-stone) / <alpha-value>)",
+        warmgray: "rgb(var(--color-warmgray) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        brick: {
+          DEFAULT: "rgb(var(--color-brick) / <alpha-value>)",
+          hover: "rgb(var(--color-brick-hover) / <alpha-value>)",
+          subtle: "rgb(var(--color-brick-subtle) / <alpha-value>)",
+        },
+        teal: {
+          DEFAULT: "rgb(var(--color-teal) / <alpha-value>)",
+          hover: "rgb(var(--color-teal-hover) / <alpha-value>)",
+          subtle: "rgb(var(--color-teal-subtle) / <alpha-value>)",
+        },
+        success: "rgb(var(--color-success) / <alpha-value>)",
+        error: "rgb(var(--color-error) / <alpha-value>)",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      // Screens are the default Tailwind breakpoints (sm/md/lg/xl/2xl) —
-      // kept explicit here as a reminder that every page in this app
-      // should be styled mobile-first and checked at each breakpoint.
       screens: {
         sm: "640px",
         md: "768px",

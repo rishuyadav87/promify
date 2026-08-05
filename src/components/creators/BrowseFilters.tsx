@@ -37,7 +37,7 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
   }, [filtered]);
 
   const selectClasses =
-    "rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
+    "rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
 
   return (
     <div className="flex flex-col gap-6">
@@ -49,7 +49,7 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
             placeholder="Search by niche…"
             value={niche}
             onChange={(e) => setNiche(e.target.value)}
-            className="w-full rounded-md border border-ink/20 bg-white py-2 pl-9 pr-3 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
+            className="w-full rounded-md border border-ink/20 bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
           />
         </div>
 
