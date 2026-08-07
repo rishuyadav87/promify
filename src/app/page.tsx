@@ -111,6 +111,17 @@ export default async function HomePage() {
           </div>
         </section>
       </main>
+
+      <footer className="mx-auto max-w-6xl border-t border-ink/10 px-4 py-8 sm:px-6 lg:px-8">
+        <p className="text-sm text-warmgray">
+          <a
+            href="/privacy"
+            className="underline underline-offset-2 hover:text-ink"
+          >
+            Privacy Policy
+          </a>
+        </p>
+      </footer>
     </>
   );
 }
