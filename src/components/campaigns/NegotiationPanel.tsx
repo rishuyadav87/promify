@@ -105,7 +105,10 @@ export function NegotiationPanel({
             <div className="flex flex-wrap gap-3">
               <form action={acceptAction}>
                 <input type="hidden" name="campaign_id" value={campaignId} />
-                <input type="hidden" name="amount" value={currentAmount} />
+                {/* No "amount" field here on purpose — the server looks up
+                    the real latest offer itself rather than trusting a
+                    client-submitted price. See acceptOffer in
+                    src/lib/actions/campaigns.ts. */}
                 <AcceptButton disabled={!canAccept} />
               </form>
               <form action={declineAction}>

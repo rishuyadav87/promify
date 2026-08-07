@@ -53,6 +53,10 @@ export async function counterOffer(
   const amount = Number(formData.get("amount"));
   if (!Number.isFinite(amount) || amount <= 0)
     return { error: "Enter a valid amount." };
+  // Sane upper bound — prevents spam/griefing offers with no real ceiling.
+  // Adjust if you have legitimate campaigns priced above this.
+  if (amount > 10_000_000)
+    return { error: "That amount looks too high — please double-check it." };
 
   const resolved = await resolveParty(campaignId);
   if ("error" in resolved) return { error: resolved.error ?? null };
@@ -77,7 +81,12 @@ export async function acceptOffer(
   formData: FormData,
 ): Promise<ActionState> {
   const campaignId = formData.get("campaign_id") as string;
-  const amount = Number(formData.get("amount"));
+  // NOTE: we deliberately do NOT read "amount" from formData here.
+  // It used to be trusted directly from a hidden form field, which meant
+  // anyone could edit it in devtools (or send a raw request) and accept
+  // at any price they chose, since RLS on campaigns only checks that
+  // you're a participant — it doesn't constrain the price value. We now
+  // always re-read the real latest offer from the database instead.
 
   const resolved = await resolveParty(campaignId);
   if ("error" in resolved) return { error: resolved.error ?? null };
@@ -88,19 +97,23 @@ export async function acceptOffer(
 
   const { data: latestOffer } = await supabase
     .from("campaign_offers")
-    .select("offered_by")
+    .select("offered_by, amount")
     .eq("campaign_id", campaignId)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  if (latestOffer?.offered_by === party) {
+  if (!latestOffer) {
+    return { error: "No offer to accept yet." };
+  }
+
+  if (latestOffer.offered_by === party) {
     return { error: "Waiting for the other side to respond to your offer." };
   }
 
   const { error } = await supabase
     .from("campaigns")
-    .update({ status: "accepted", price: Math.round(amount) })
+    .update({ status: "accepted", price: Math.round(latestOffer.amount) })
     .eq("id", campaignId);
   if (error) return { error: error.message };
 
