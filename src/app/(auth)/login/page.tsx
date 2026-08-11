@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 export default function LoginPage() {
-  const router = useRouter();
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,8 +27,18 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    // A hard navigation here (not router.push) is intentional. router.push
+    // does a soft client-side transition, which can serve an already-cached
+    // "logged out" version of /dashboard from before this sign-in, since
+    // Next.js prefetches routes in the background. That caused the
+    // "have to log in twice" symptom: first submit set the session cookie
+    // correctly, but the dashboard's redirect check ran against stale
+    // cached content and bounced back to /login; the second submit then
+    // "worked" only because the cache had caught up by then.
+    // window.location.href forces a full reload straight through
+    // middleware.ts with the fresh cookie, avoiding the stale cache
+    // entirely.
+    window.location.href = "/dashboard";
   }
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 py-16 sm:px-6">
