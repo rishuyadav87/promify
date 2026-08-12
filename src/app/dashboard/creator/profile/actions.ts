@@ -36,10 +36,20 @@ export async function updateCreatorProfile(
   // `npm run gen:types` has been run.
   const profileUrlRaw = (formData.get("profile_url") as string)?.trim();
   if (profileUrlRaw) {
+    // `new URL(...)` alone isn't enough here — new URL("javascript:x")
+    // doesn't throw, it just parses with protocol "javascript:". Since
+    // this value later gets rendered as a real <a href> on the brand's
+    // browse page, that would let a creator store a javascript: link and
+    // run arbitrary code in any brand's browser the moment they click it
+    // (stored XSS). Explicitly whitelisting http/https closes that off.
+    let parsed: URL;
     try {
-      new URL(profileUrlRaw);
+      parsed = new URL(profileUrlRaw);
     } catch {
       return { error: "Profile link must be a valid URL." };
+    }
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return { error: "Profile link must start with http:// or https://." };
     }
   }
   (update as Record<string, unknown>).profile_url = profileUrlRaw || null;
