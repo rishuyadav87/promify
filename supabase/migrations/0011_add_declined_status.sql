@@ -1,0 +1,15 @@
+-- ---------------------------------------------------------------------------
+-- Fix: declineCampaign has been broken since it was written
+-- ---------------------------------------------------------------------------
+-- src/lib/actions/campaigns.ts's declineCampaign writes status: "declined",
+-- but campaign_status (0001_init.sql) never included that value:
+--   'pending','accepted','content_submitted','live','measuring',
+--   'completed','refunded','disputed'
+-- Every attempt to decline a booking has been failing with a raw Postgres
+-- "invalid input value for enum" error instead of actually declining it.
+--
+-- This has to be its own migration, separate from anything that *uses*
+-- the new value (like the state-machine trigger in the next migration) --
+-- Postgres doesn't allow a newly added enum value to be referenced in the
+-- same transaction that added it.
+alter type public.campaign_status add value if not exists 'declined';

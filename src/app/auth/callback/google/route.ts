@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/serviceRole";
 import { getEligibleTier } from "@/lib/pricing";
 import type { Database } from "@/lib/types/database.types";
 
@@ -143,7 +144,16 @@ export async function GET(request: NextRequest) {
     tier,
   };
 
-  const { error } = await supabase
+  // This specific write uses the service-role client, not the regular
+  // session client used everywhere else in this route. It's the one
+  // place in the app allowed to bypass RLS, because a database trigger
+  // (0014_protect_youtube_verified_columns.sql) now blocks a normal user
+  // session from setting oauth_connected or follower_count on a YouTube
+  // row directly -- this route is the only legitimate path left that can
+  // still write them, precisely because everything above this line has
+  // already independently verified the data with Google's own API.
+  const serviceRoleClient = createServiceRoleClient();
+  const { error } = await serviceRoleClient
     .from("creators")
     .upsert(creatorUpsert, { onConflict: "user_id,platform" });
 
