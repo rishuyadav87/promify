@@ -73,17 +73,27 @@ export default async function HomePage() {
               <Step
                 number="01"
                 title="List your platforms"
-                text="Add your Instagram or YouTube handle, follower count, and niche."
+                text="Add your Instagram or YouTube handle, follower count, and niche. Each platform you're on gets its own listing, so a creator active on both shows up separately for each."
               />
               <Step
                 number="02"
-                title="Review campaign offers"
-                text="Brands propose a price and usage rights — you accept, decline, or negotiate."
+                title="Get a price band automatically"
+                text="Your price range is calculated from your follower count and platform — from ₹500–₹2,000 for nano creators up to ₹15,000–₹50,000 for accounts over 100K followers. YouTube creators with monetization on get a higher band than the same follower count on Instagram."
               />
               <Step
                 number="03"
-                title="Get paid on schedule"
-                text="Payouts release once the campaign's measurement window closes, TDS already deducted."
+                title="Review campaign offers"
+                text="Brands book you with a content brief and either your suggested price or their own opening offer. Accept it, decline it, or counter with a different number — either side can keep countering until you land on a price."
+              />
+              <Step
+                number="04"
+                title="Submit your content"
+                text="Once a price is accepted, submit the link to your posted content. The brand then has a review window to confirm it's good."
+              />
+              <Step
+                number="05"
+                title="Get confirmed or resolve an issue"
+                text="The brand can confirm they're happy right away, or the campaign completes automatically once the review window passes. If either side flags a problem, the campaign pauses and you can fix and resubmit your content."
               />
             </ol>
           </div>
@@ -94,22 +104,84 @@ export default async function HomePage() {
             <ol className="mt-6 flex flex-col gap-6">
               <Step
                 number="01"
-                title="Find the right creator"
-                text="Browse by platform, tier, and niche to match your campaign."
+                title="Browse verified creators"
+                text="Filter by platform, tier, and niche. YouTube creators can connect their account for a real, API-verified subscriber count instead of a self-reported one."
               />
               <Step
                 number="02"
-                title="Set the terms upfront"
-                text="Price, usage rights, and approval requirements are agreed before content goes live."
+                title="Book with a clear brief"
+                text="Tell the creator exactly what you need — content type, key messaging, deadlines, usage rights — alongside your offer. Use their suggested price or propose your own to start the negotiation."
               />
               <Step
                 number="03"
-                title="Track performance"
-                text="Follow each campaign from live to measured, with dispute support if something's off."
+                title="Negotiate to a number you both agree on"
+                text="Either side can counter until you settle on a final price. Nothing is locked in until it's actually accepted by both parties."
+              />
+              <Step
+                number="04"
+                title="Review the delivered content"
+                text="Once the creator submits their post, you get a review window to check it against your brief before the campaign completes."
+              />
+              <Step
+                number="05"
+                title="Confirm or raise an issue"
+                text="Happy with it? Confirm and the campaign completes. Something off? Report the issue with a reason — the campaign pauses for review and the creator can submit a correction."
               />
             </ol>
           </div>
         </section>
+
+        <section className="border-t border-ink/10 py-16 sm:py-20">
+          <h2 className="text-2xl font-semibold tracking-tight text-ink">
+            How pricing works
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm text-warmgray">
+            Every creator's price band is calculated automatically from
+            their follower count and platform — nobody has to guess what to
+            charge or offer.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <PriceTierCard
+              label="Nano"
+              range="1,000–9,999 followers"
+              price="₹500–₹2,000"
+            />
+            <PriceTierCard
+              label="Micro"
+              range="10,000–99,999 followers"
+              price="₹2,000–₹15,000"
+            />
+            <PriceTierCard
+              label="Mid-tier"
+              range="100,000–499,999 followers"
+              price="₹15,000–₹50,000"
+            />
+          </div>
+          <p className="mt-4 text-xs text-warmgray">
+            Below 1,000 followers, a creator isn't yet eligible for a
+            listing. Above 500,000, pricing is handled case-by-case rather
+            than by a fixed band. YouTube creators with monetization
+            enabled get a higher band than the same follower count would
+            get on Instagram, since a monetized channel is a stronger
+            signal of real audience reach.
+          </p>
+        </section>
+
+        <section className="border-t border-ink/10 py-16 sm:py-20">
+          <h2 className="text-2xl font-semibold tracking-tight text-ink">
+            What happens if something goes wrong
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm text-warmgray">
+            Either the brand or the creator can report an issue on an
+            active campaign — a mismatched brief, a post that came down
+            early, or anything else that doesn't match what was agreed.
+            Reporting an issue pauses the campaign immediately and puts it
+            in front of an admin for review, and the creator can submit
+            corrected content to move things forward while it's being
+            looked at.
+          </p>
+        </section>
+
       </main>
 
       <footer className="mx-auto max-w-6xl border-t border-ink/10 px-4 py-8 sm:px-6 lg:px-8">
@@ -123,6 +195,26 @@ export default async function HomePage() {
         </p>
       </footer>
     </>
+  );
+}
+
+function PriceTierCard({
+  label,
+  range,
+  price,
+}: {
+  label: string;
+  range: string;
+  price: string;
+}) {
+  return (
+    <div className="rounded-lg border border-ink/10 bg-surface p-5">
+      <p className="text-xs font-medium uppercase tracking-wide text-warmgray">
+        {label}
+      </p>
+      <p className="mt-2 text-xl font-semibold text-ink">{price}</p>
+      <p className="mt-1 text-xs text-warmgray">{range}</p>
+    </div>
   );
 }
 
