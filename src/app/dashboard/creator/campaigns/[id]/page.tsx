@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
 import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
+import { CampaignResolutionPanel } from "@/components/campaigns/CampaignResolutionPanel";
 import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
 export default async function CreatorCampaignDetailPage({
   params,
@@ -64,6 +65,12 @@ export default async function CreatorCampaignDetailPage({
         postUrl={campaign.post_url}
         measurementWindowEndsAt={campaign.measurement_window_ends_at}
         price={campaign.price}
+        viewerParty="creator"
+      />
+      <CampaignResolutionPanel
+        campaignId={campaign.id}
+        status={campaign.status}
+        postUrl={campaign.post_url}
         viewerParty="creator"
       />
     </div>

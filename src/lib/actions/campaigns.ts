@@ -188,3 +188,86 @@ export async function submitContent(
   revalidateCampaign(campaignId);
   return { error: null };
 }
+
+const ACTIVE_STATUSES = [
+  "accepted",
+  "content_submitted",
+  "live",
+  "measuring",
+] as const;
+
+export async function confirmSatisfaction(
+  prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const campaignId = formData.get("campaign_id") as string;
+
+  const resolved = await resolveParty(campaignId);
+  if ("error" in resolved) return { error: resolved.error ?? null };
+  const { supabase, campaign, party } = resolved;
+
+  if (party !== "brand") {
+    return { error: "Only the brand can confirm satisfaction with content." };
+  }
+  if (!(ACTIVE_STATUSES as readonly string[]).includes(campaign.status)) {
+    return { error: "This campaign isn't in a state that can be confirmed." };
+  }
+
+  // This is the brand explicitly saying "I'm happy, release payout now"
+  // instead of waiting for the 48-hour measurement window to expire and
+  // auto-complete it (see campaignLifecycle.ts). Real payout release
+  // itself isn't wired up yet -- that depends on Razorpay actually being
+  // integrated -- so for now this only moves the campaign to 'completed'.
+  // Once Razorpay/payouts are live, this is the natural place to also
+  // insert the real payouts row for this campaign.
+  const { error } = await supabase
+    .from("campaigns")
+    .update({ status: "completed" })
+    .eq("id", campaignId);
+  if (error) return { error: error.message };
+
+  revalidateCampaign(campaignId);
+  return { error: null };
+}
+
+export async function openDispute(
+  prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const campaignId = formData.get("campaign_id") as string;
+  const reason = (formData.get("reason") as string)?.trim();
+
+  if (!reason || reason.length < 10) {
+    return {
+      error: "Please describe the issue in a bit more detail (10+ characters).",
+    };
+  }
+
+  const resolved = await resolveParty(campaignId);
+  if ("error" in resolved) return { error: resolved.error ?? null };
+  const { supabase, campaign } = resolved;
+
+  if (!(ACTIVE_STATUSES as readonly string[]).includes(campaign.status)) {
+    return { error: "This campaign isn't in a state that can be disputed." };
+  }
+
+  // Insert the dispute record first, then move the campaign into
+  // 'disputed' -- if the status update fails (e.g. an invalid
+  // transition), we'd rather have an orphaned dispute row an admin can
+  // still see than a campaign silently stuck disputed with no reason
+  // recorded anywhere.
+  const { error: disputeError } = await supabase
+    .from("disputes")
+    .insert({ campaign_id: campaignId, reason });
+  if (disputeError) return { error: disputeError.message };
+
+  const { error: statusError } = await supabase
+    .from("campaigns")
+    .update({ status: "disputed" })
+    .eq("id", campaignId);
+  if (statusError) return { error: statusError.message };
+
+  revalidateCampaign(campaignId);
+  revalidatePath("/dashboard/admin");
+  return { error: null };
+}
