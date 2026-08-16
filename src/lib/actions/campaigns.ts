@@ -271,3 +271,48 @@ export async function openDispute(
   revalidatePath("/dashboard/admin");
   return { error: null };
 }
+
+export async function resubmitContent(
+  prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const campaignId = formData.get("campaign_id") as string;
+  const postUrl = (formData.get("post_url") as string)?.trim();
+  if (!postUrl) return { error: "Enter a URL." };
+  try {
+    new URL(postUrl);
+  } catch {
+    return { error: "Enter a valid URL (including https://)." };
+  }
+
+  const resolved = await resolveParty(campaignId);
+  if ("error" in resolved) return { error: resolved.error ?? null };
+  const { supabase, campaign, party } = resolved;
+
+  if (party !== "creator") {
+    return { error: "Only the creator can resubmit content." };
+  }
+  if (campaign.status !== "disputed") {
+    return { error: "This campaign isn't currently disputed." };
+  }
+
+  // Same flat 48-hour window as the first submission (submitContent) --
+  // resubmitting restarts it, since the brand needs a fresh window to
+  // review the corrected content.
+  const measurementWindowEndsAt = new Date(
+    Date.now() + 48 * 60 * 60 * 1000,
+  ).toISOString();
+
+  const { error } = await supabase
+    .from("campaigns")
+    .update({
+      post_url: postUrl,
+      status: "content_submitted",
+      measurement_window_ends_at: measurementWindowEndsAt,
+    })
+    .eq("id", campaignId);
+  if (error) return { error: error.message };
+
+  revalidateCampaign(campaignId);
+  return { error: null };
+}

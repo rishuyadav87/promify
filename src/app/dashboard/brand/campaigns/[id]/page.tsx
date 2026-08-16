@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/Card";
 import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
 import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
 import { CampaignResolutionPanel } from "@/components/campaigns/CampaignResolutionPanel";
+import { DisputeNotice } from "@/components/campaigns/DisputeNotice";
 import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
 export default async function BrandCampaignDetailPage({
@@ -35,6 +36,14 @@ export default async function BrandCampaignDetailPage({
 
   const currentAmount = offers?.[0]?.amount ?? campaign.price;
 
+  const { data: dispute } = await supabase
+    .from("disputes")
+    .select("reason, status, created_at")
+    .eq("campaign_id", params.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -62,6 +71,13 @@ export default async function BrandCampaignDetailPage({
             {campaign.brief}
           </p>
         </Card>
+      )}
+      {dispute && (
+        <DisputeNotice
+          reason={dispute.reason}
+          status={dispute.status}
+          createdAt={dispute.created_at}
+        />
       )}
       <NegotiationPanel
         campaignId={campaign.id}
