@@ -3,13 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 
-type BrandRow = {
-  id: string;
-  company_name: string;
-  created_at: string;
-  users: { email: string } | null;
-};
-
 export default async function AdminBrandsPage() {
   const supabase = createClient();
 
@@ -25,13 +18,10 @@ export default async function AdminBrandsPage() {
     .single();
   if (viewer?.role !== "admin") redirect("/dashboard");
 
-  const { data: brands, error } = (await supabase
+  const { data: brands, error } = await supabase
     .from("brands")
     .select("id, company_name, created_at, users ( email )")
-    .order("created_at", { ascending: false })) as unknown as {
-    data: BrandRow[] | null;
-    error: any;
-  };
+    .order("created_at", { ascending: false });
 
   return (
     <div className="flex flex-col gap-6">

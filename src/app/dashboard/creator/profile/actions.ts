@@ -31,9 +31,9 @@ export async function updateCreatorProfile(
     niche,
   };
 
-  // profile_url isn't in database.types.ts yet (added by migration 0003,
-  // types not regenerated) — cast is a temporary workaround, remove once
-  // `npm run gen:types` has been run.
+  // profile_url is now correctly typed on the generated Database types
+  // (added in migration 0003, regenerated after 0014) -- assigning it
+  // directly, same as every other field on `update` below.
   const profileUrlRaw = (formData.get("profile_url") as string)?.trim();
   if (profileUrlRaw) {
     // `new URL(...)` alone isn't enough here — new URL("javascript:x")
@@ -52,7 +52,7 @@ export async function updateCreatorProfile(
       return { error: "Profile link must start with http:// or https://." };
     }
   }
-  (update as Record<string, unknown>).profile_url = profileUrlRaw || null;
+  update.profile_url = profileUrlRaw || null;
 
   const customPriceRaw = (formData.get("custom_price") as string)?.trim();
   if (customPriceRaw) {

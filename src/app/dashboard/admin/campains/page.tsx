@@ -5,15 +5,6 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { statusBadgeVariant } from "@/lib/campaignStatus";
 
-type CampaignRow = {
-  id: string;
-  status: string;
-  price: number;
-  created_at: string;
-  brands: { company_name: string } | null;
-  creators: { display_name: string } | null;
-};
-
 const ACTIVE_STATUSES = [
   "accepted",
   "content_submitted",
@@ -53,10 +44,7 @@ export default async function AdminCampaignsPage({
     query = query.in("status", ACTIVE_STATUSES);
   }
 
-  const { data: campaigns, error } = (await query) as unknown as {
-    data: CampaignRow[] | null;
-    error: any;
-  };
+  const { data: campaigns, error } = await query;
 
   return (
     <div className="flex flex-col gap-6">

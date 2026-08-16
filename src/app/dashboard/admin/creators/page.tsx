@@ -7,20 +7,6 @@ import { Button } from "@/components/ui/Button";
 import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { setCreatorApproval } from "./actions";
 
-type CreatorRow = {
-  id: string;
-  user_id: string;
-  display_name: string;
-  platform: string;
-  handle: string;
-  follower_count: number;
-  tier: string | null;
-  niche: string | null;
-  youtube_monetized: boolean;
-  approved: boolean;
-  users: { email: string } | null;
-};
-
 export default async function AdminCreatorsPage() {
   const supabase = createClient();
 
@@ -36,17 +22,17 @@ export default async function AdminCreatorsPage() {
     .single();
   if (viewer?.role !== "admin") redirect("/dashboard");
 
-  const { data: rows, error } = (await supabase
+  const { data: rows, error } = await supabase
     .from("creators")
     .select(
       "id, user_id, display_name, platform, handle, follower_count, tier, niche, youtube_monetized, approved, users ( email )",
     )
-    .order("follower_count", { ascending: false })) as unknown as {
-    data: CreatorRow[] | null;
-    error: any;
-  };
+    .order("follower_count", { ascending: false });
 
-  const grouped = new Map<string, CreatorRow[]>();
+  // Deriving the Map's element type from `rows` itself (instead of a
+  // separately hand-written CreatorRow type, like this used to have)
+  // means it can never drift out of sync with the real query shape again.
+  const grouped = new Map<string, NonNullable<typeof rows>>();
   for (const row of rows ?? []) {
     const existing = grouped.get(row.user_id) ?? [];
     existing.push(row);

@@ -32,11 +32,7 @@ export async function bookCreator(
   // someone from submitting an absurd number (₹1 or ₹1 crore) by mistake
   // or on purpose. The creator can still counter or decline either way, so
   // this is a sanity check, not a hard business rule.
-  if (
-    Number.isFinite(expectedLow) &&
-    Number.isFinite(expectedHigh) &&
-    expectedHigh > 0
-  ) {
+  if (Number.isFinite(expectedLow) && Number.isFinite(expectedHigh) && expectedHigh > 0) {
     const floor = expectedLow * 0.5;
     const ceiling = expectedHigh * 2;
     if (price < floor || price > ceiling) {
@@ -65,7 +61,7 @@ export async function bookCreator(
     expected_range_low: Math.round(expectedLow),
     expected_range_high: Math.round(expectedHigh),
     brief,
-  } as never);
+  });
 
   if (error) return { error: error.message };
 

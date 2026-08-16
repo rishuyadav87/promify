@@ -13,29 +13,13 @@ export default async function CreatorDetailPage({
 }) {
   const supabase = createClient();
 
-  type CreatorDetailRow = {
-    id: string | null;
-    display_name: string | null;
-    platform: "instagram" | "youtube" | null;
-    handle: string | null;
-    follower_count: number | null;
-    tier: "tier1" | "tier2" | null;
-    niche: string | null;
-    youtube_monetized: boolean | null;
-    custom_price: number | null;
-    // profile_url isn't in database.types.ts yet (added by migration 0003,
-    // types not regenerated) — remove this cast once `npm run gen:types` has
-    // been run against the live database.
-    profile_url: string | null;
-  };
-
-  const { data: creator, error } = (await supabase
+  const { data: creator, error } = await supabase
     .from("public_creator_profiles")
     .select(
       "id, display_name, platform, handle, follower_count, tier, niche, youtube_monetized, custom_price, profile_url",
     )
     .eq("id", params.creatorId)
-    .single()) as unknown as { data: CreatorDetailRow | null; error: any };
+    .single();
 
   if (error || !creator) notFound();
 

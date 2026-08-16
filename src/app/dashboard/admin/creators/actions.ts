@@ -32,7 +32,7 @@ export async function setCreatorApproval(
 
   const { error } = await supabase
     .from("creators")
-    .update({ approved } as never) // remove `as never` after regenerating types
+    .update({ approved })
     .eq("id", creatorId);
 
   if (error) throw new Error(error.message);

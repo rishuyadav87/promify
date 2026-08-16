@@ -4,26 +4,6 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { statusBadgeVariant } from "@/lib/campaignStatus";
 import Link from "next/link";
-type CampaignRow = {
-  id: string;
-  status: string;
-  price: number;
-  created_at: string;
-  brands: { company_name: string } | null;
-  creators: { display_name: string } | null;
-};
-
-type DisputeRow = {
-  id: string;
-  reason: string;
-  status: string;
-  created_at: string;
-  campaigns: {
-    id: string;
-    brands: { company_name: string } | null;
-    creators: { display_name: string } | null;
-  } | null;
-};
 
 export default async function AdminDashboardPage() {
   const supabase = createClient();
@@ -56,20 +36,14 @@ export default async function AdminDashboardPage() {
         "id, status, price, created_at, brands ( company_name ), creators ( display_name )",
       )
       .order("created_at", { ascending: false })
-      .limit(50) as unknown as Promise<{
-      data: CampaignRow[] | null;
-      error: any;
-    }>,
+      .limit(50),
     supabase
       .from("disputes")
       .select(
         "id, reason, status, created_at, campaigns ( id, brands ( company_name ), creators ( display_name ) )",
       )
       .eq("status", "open")
-      .order("created_at", { ascending: false }) as unknown as Promise<{
-      data: DisputeRow[] | null;
-      error: any;
-    }>,
+      .order("created_at", { ascending: false }),
     supabase.from("campaigns").select("id", { count: "exact", head: true }),
     supabase
       .from("campaigns")

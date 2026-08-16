@@ -17,30 +17,13 @@ export default async function CreatorProfilePage({
   if (!user) {
     redirect("/login");
   }
-  type CreatorProfileRow = {
-    id: string;
-    display_name: string;
-    platform: "instagram" | "youtube";
-    handle: string;
-    follower_count: number;
-    niche: string | null;
-    oauth_connected: boolean;
-    custom_price: number | null;
-    youtube_monetized: boolean;
-    // profile_url isn't in database.types.ts yet (added by migration 0003,
-    // types not regenerated) — remove this cast once `npm run gen:types` has
-    // been run against the live database.
-    profile_url: string | null;
-  };
-
-  const { data: profiles } = (await supabase
+  const { data: profiles } = await supabase
     .from("creators")
     .select(
       "id, display_name, platform, handle, follower_count, niche, oauth_connected, custom_price, youtube_monetized, profile_url",
     )
-
     .eq("user_id", user.id)
-    .order("platform")) as unknown as { data: CreatorProfileRow[] | null };
+    .order("platform");
 
   const connectedPlatforms = (profiles ?? []).map((p) => p.platform);
   const hasYoutube = connectedPlatforms.includes("youtube");

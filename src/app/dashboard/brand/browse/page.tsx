@@ -27,7 +27,27 @@ export default async function BrowseCreatorsPage() {
 
       {!error && (
         <BrowseFilters
-          creators={(creators as unknown as CreatorProfile[]) ?? []}
+          creators={
+            (creators ?? [])
+              // public_creator_profiles is a database VIEW, and Postgres
+              // views report every column as nullable in generated types
+              // regardless of the underlying table's real constraints --
+              // this is a genuine nullability gap, not leftover staleness
+              // from before types were regenerated, so a straight cast
+              // would be papering over something real. Filtering out any
+              // row missing a required field is the honest fix: it keeps
+              // TypeScript's guarantee meaningful instead of just
+              // silencing it.
+              .filter(
+                (c): c is typeof c & CreatorProfile =>
+                  c.id !== null &&
+                  c.user_id !== null &&
+                  c.display_name !== null &&
+                  c.platform !== null &&
+                  c.handle !== null &&
+                  c.follower_count !== null,
+              )
+          }
         />
       )}
     </div>

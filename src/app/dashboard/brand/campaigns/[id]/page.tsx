@@ -12,25 +12,13 @@ export default async function BrandCampaignDetailPage({
 }) {
   const supabase = createClient();
 
-  type CampaignDetailRow = {
-    id: string;
-    status: string;
-    price: number;
-    post_url: string | null;
-    brief: string | null;
-    measurement_window_ends_at: string | null;
-    created_at: string;
-    brands: { company_name: string } | null;
-    creators: { display_name: string; platform: string; handle: string } | null;
-  };
-
-  const { data: campaignRow, error } = (await supabase
+  const { data: campaignRow, error } = await supabase
     .from("campaigns")
     .select(
       "id, status, price, post_url, brief, measurement_window_ends_at, created_at, brands ( company_name ), creators ( display_name, platform, handle )",
     )
     .eq("id", params.id)
-    .single()) as unknown as { data: CampaignDetailRow | null; error: any };
+    .single();
   if (error || !campaignRow) notFound();
 
   const campaign = {
