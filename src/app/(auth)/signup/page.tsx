@@ -1,18 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 type Role = "creator" | "brand";
 
+// useSearchParams requires a Suspense boundary in the App Router, or
+// `npm run build` fails even though `npm run dev` looks fine -- this
+// split (outer wrapper + inner form) is the standard fix: the boundary
+// has to sit *above* the component that calls useSearchParams, not
+// around itself.
 export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
+  );
+}
+
+function SignupForm() {
   const router = useRouter();
   const supabase = createClient();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<Role>("creator");
+  // Preselects based on ?role=creator|brand if the person arrived from
+  // the homepage's split hero (see src/app/page.tsx) -- falls back to
+  // "creator" for anyone landing here directly, same as before.
+  const [role, setRole] = useState<Role>(
+    searchParams.get("role") === "brand" ? "brand" : "creator",
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);

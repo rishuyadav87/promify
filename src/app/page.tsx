@@ -34,35 +34,72 @@ export default async function HomePage() {
       </nav>
 
       <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
-        <section className="flex flex-col items-center gap-6 py-16 text-center sm:py-24">
-          <span className="rounded-full bg-teal-subtle px-3 py-1 text-xs font-medium uppercase tracking-wide text-teal">
-            For creators & brands
-          </span>
-          <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-ink sm:text-5xl md:text-6xl">
-            Where creators and brands agree on the deal — and both sides get
-            paid on time.
-          </h1>
-          <p className="max-w-xl text-base text-warmgray sm:text-lg">
-            Set your price, agree on usage rights, and track every campaign from
-            pitch to payout — with TDS handled automatically.
-          </p>
-          <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-            <Button
-              href="/signup"
-              variant="primary"
-              className="px-8 py-3 text-base"
-            >
-              Get started
-            </Button>
-            <Button
-              href="/login"
-              variant="outline"
-              className="px-8 py-3 text-base"
-            >
-              Log in
-            </Button>
+        {/*
+          The signature moment: the hero is the "Two Sides" concept made
+          literal rather than decorative. Two panels, brick and teal,
+          meet at a center seam — creators on one side, brands on the
+          other, each with their own headline and entry point, instead
+          of one generic combined message both audiences have to
+          mentally split themselves.
+        */}
+        <section className="grid overflow-hidden rounded-2xl border border-ink/10 sm:grid-cols-2">
+          <div className="flex flex-col justify-between gap-6 bg-brick-subtle p-8 sm:p-12">
+            <div>
+              <span className="text-xs font-medium uppercase tracking-wide text-brick">
+                For creators
+              </span>
+              <h1 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl">
+                Name your price. Get booked on your terms.
+              </h1>
+              <p className="mt-4 max-w-sm text-sm text-ink/70 sm:text-base">
+                List your Instagram or YouTube, get an automatic price
+                band from your following, and negotiate every offer
+                before you agree to anything.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                href="/signup?role=creator"
+                variant="secondary"
+                className="justify-center px-6 py-3 text-base"
+              >
+                Join as a creator
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between gap-6 bg-teal-subtle p-8 sm:p-12">
+            <div>
+              <span className="text-xs font-medium uppercase tracking-wide text-teal">
+                For brands
+              </span>
+              <h1 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl">
+                Book the right creator. Know exactly what you're getting.
+              </h1>
+              <p className="mt-4 max-w-sm text-sm text-ink/70 sm:text-base">
+                Browse verified creators, send a clear brief with your
+                offer, and track every campaign from booking through to
+                delivery.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                href="/signup?role=brand"
+                variant="primary"
+                className="justify-center px-6 py-3 text-base"
+              >
+                Join as a brand
+              </Button>
+            </div>
           </div>
         </section>
+
+        <p className="mt-4 text-center text-sm text-warmgray">
+          Already have an account?{" "}
+          <a href="/login" className="text-ink underline underline-offset-2">
+            Log in
+          </a>
+        </p>
 
         <section className="grid gap-10 border-t border-ink/10 py-16 sm:py-20 md:grid-cols-2 md:gap-16">
           <div>
