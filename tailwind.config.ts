@@ -28,6 +28,11 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        display: ["var(--font-display)", "Georgia", "serif"],
+        sans: ["var(--font-body)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
       screens: {
         sm: "640px",
         md: "768px",

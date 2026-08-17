@@ -1,7 +1,39 @@
 import type { Metadata, Viewport } from "next";
+import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthSyncListener } from "@/components/AuthSyncListener";
+
+// Three type roles, replacing the previous system-default font stack:
+// - Display (Zilla Slab): headlines only. A true slab serif ties back to
+//   the "brick" side of the Two Sides palette — stamped, pressed letterforms
+//   rather than the geometric sans nearly every SaaS/AI-generated site
+//   reaches for by default.
+// - Body (IBM Plex Sans): everything else. Sturdy, readable, and distinct
+//   from the ubiquitous Inter.
+// - Mono (IBM Plex Mono): prices and other numeric/data values specifically
+//   — gives money figures a ledger feel appropriate to a marketplace,
+//   applied selectively rather than as a global body font.
+const displayFont = Zilla_Slab({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const bodyFont = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const monoFont = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Creo",
@@ -19,8 +51,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen antialiased">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
+    >
+      <body className="min-h-screen font-sans antialiased">
         <ThemeProvider>
           <AuthSyncListener />
           {children}

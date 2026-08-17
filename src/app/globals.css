@@ -16,13 +16,13 @@
  */
 :root {
   --color-ink: 32 29 26; /* #201D1A — text on light */
-  --color-stone: 243 239 232; /* #F3EFE8 — page background on light */
+  --color-stone: 237 231 221; /* #EDE7DD — page background on light, pulled cooler/grayer than the original to step away from the warm-cream-background look common in AI-generated design */
   --color-warmgray: 138 132 120; /* #8A8478 */
   --color-surface: 255 255 255; /* card / input background on light */
 
-  --color-brick: 181 72 47; /* #B5482F */
-  --color-brick-hover: 156 60 39; /* #9C3C27 */
-  --color-brick-subtle: 245 228 222; /* #F5E4DE */
+  --color-brick: 168 57 31; /* #A8391F — deepened into a true fired-clay brick red, moved off the dusty terracotta-accent look that reads as a template default */
+  --color-brick-hover: 143 47 26; /* #8F2F1A */
+  --color-brick-subtle: 240 222 213; /* #F0DED5 */
 
   --color-teal: 27 74 71; /* #1B4A47 */
   --color-teal-hover: 20 55 53; /* #143735 */
@@ -31,7 +31,7 @@
   --color-success: 61 122 84; /* #3D7A54 */
   --color-error: 176 70 58; /* #B0463A */
 
-  --background: #f3efe8;
+  --background: #ede7dd;
   --foreground: #201d1a;
 
   color-scheme: light;
@@ -43,9 +43,9 @@
   --color-warmgray: 163 156 142; /* lightened for legibility on dark */
   --color-surface: 38 34 30; /* #26221E — cards lift slightly off the page bg */
 
-  --color-brick: 224 120 86; /* #E07856 — brightened for dark contrast */
-  --color-brick-hover: 201 100 66; /* #C96442 */
-  --color-brick-subtle: 58 36 28; /* #3A241C — dark-tinted surface, not a light tint */
+  --color-brick: 217 103 63; /* #D9673F — brightened from the new light-mode brick, keeps the same true-clay character rather than drifting toward orange */
+  --color-brick-hover: 193 89 53; /* #C15935 */
+  --color-brick-subtle: 56 34 27; /* #38221B — dark-tinted surface, not a light tint */
 
   --color-teal: 79 166 158; /* #4FA69E — brightened, original is unreadable on dark */
   --color-teal-hover: 109 187 179; /* #6DBBB3 */
@@ -66,4 +66,19 @@ body {
   transition:
     background-color 150ms ease,
     color 150ms ease;
+}
+
+/*
+ * Applies the display face to every heading across the whole app in one
+ * place, rather than adding a font-display class to headings in dozens
+ * of individual page/component files. Body text and everything else
+ * keeps the font-sans set on <body> in layout.tsx.
+ */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
