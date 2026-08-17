@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Card } from "@/components/ui/Card";
 import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { updateCreatorProfile } from "@/app/dashboard/creator/profile/actions";
+import { getPriceBand } from "@/lib/pricing";
 
 type Profile = {
   id: string;
@@ -41,6 +43,15 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
   const [state, formAction] = useFormState(updateCreatorProfile, {
     error: null,
   });
+  const [customPrice, setCustomPrice] = useState(
+    profile.custom_price?.toString() ?? "",
+  );
+
+  const band = getPriceBand(
+    profile.platform,
+    profile.follower_count,
+    profile.youtube_monetized,
+  );
 
   return (
     <Card className="flex flex-col gap-5">
@@ -72,6 +83,50 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
           value={String(profile.oauth_connected)}
         />
         <input type="hidden" name="platform" value={profile.platform} />
+
+        {/*
+          Pricing gets its own highlighted block at the top of the form,
+          rather than sitting as a buried "(optional)" field below
+          everything else -- it's the decision creators most need to see
+          and act on, so it shouldn't be the last thing they scroll past.
+        */}
+        <div className="flex flex-col gap-2 rounded-lg border border-brick/25 bg-brick-subtle p-4">
+          <label
+            htmlFor={`custom_price_${profile.id}`}
+            className="text-sm font-semibold text-ink"
+          >
+            Set your own price
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-warmgray">₹</span>
+            <input
+              id={`custom_price_${profile.id}`}
+              name="custom_price"
+              type="number"
+              min={0}
+              value={customPrice}
+              onChange={(e) => setCustomPrice(e.target.value)}
+              placeholder="e.g. 5000"
+              className={`${inputClasses} flex-1`}
+            />
+          </div>
+          <p className="text-xs text-ink/70">
+            {customPrice.trim()
+              ? "Brands will see this exact price instead of a calculated range."
+              : band.custom
+                ? `Leave this blank and brands will see "${band.label}" instead of a fixed number.`
+                : `Leave this blank and brands will see your calculated range: ₹${band.low.toLocaleString("en-IN")}–₹${band.high.toLocaleString("en-IN")}, based on your follower count.`}
+          </p>
+          {customPrice.trim() && (
+            <button
+              type="button"
+              onClick={() => setCustomPrice("")}
+              className="self-start text-xs font-medium text-brick underline"
+            >
+              Clear and use the calculated range instead
+            </button>
+          )}
+        </div>
 
         <div className="flex flex-col gap-1.5">
           <label
@@ -200,27 +255,6 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
           </p>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor={`custom_price_${profile.id}`}
-            className="text-sm font-medium text-ink"
-          >
-            Your price (optional)
-          </label>
-          <input
-            id={`custom_price_${profile.id}`}
-            name="custom_price"
-            type="number"
-            min={0}
-            defaultValue={profile.custom_price ?? ""}
-            placeholder="Leave blank to use the calculated price band"
-            className={inputClasses}
-          />
-          <p className="text-xs text-warmgray">
-            Set your own flat rate, or leave blank to let brands see the
-            calculated price band based on your follower count.
-          </p>
-        </div>
         {state.error && <p className="text-sm text-error">{state.error}</p>}
 
         <SaveButton />
