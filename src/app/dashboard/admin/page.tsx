@@ -57,12 +57,17 @@ export default async function AdminDashboardPage() {
     {
       label: "Total campaigns",
       value: totalCampaigns ?? 0,
-      href: "/dashboard/admin/campaigns",
+      // The folder is spelled "campains" (missing the g) -- this was
+      // linking to "/campaigns" (correctly spelled), which doesn't exist
+      // as a route, so clicking this card 404'd. Pointing at the real
+      // route rather than renaming the folder, since renaming risks
+      // breaking any other reference to the existing URL.
+      href: "/dashboard/admin/campains",
     },
     {
       label: "Active campaigns",
       value: activeCampaigns ?? 0,
-      href: "/dashboard/admin/campaigns?filter=active",
+      href: "/dashboard/admin/campains?filter=active",
     },
     {
       label: "Total creators",

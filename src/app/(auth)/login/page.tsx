@@ -92,6 +92,15 @@ export default function LoginPage() {
           </Button>
         </form>
       </Card>
+      <p className="mt-4 text-center text-sm text-warmgray">
+        Don&apos;t have an account?{" "}
+        <a
+          href="/signup"
+          className="font-medium text-ink underline underline-offset-2"
+        >
+          Sign up
+        </a>
+      </p>
     </main>
   );
 }

@@ -39,7 +39,7 @@ export default async function CreatorDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Card className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-semibold text-ink">
@@ -64,6 +64,13 @@ export default async function CreatorDashboardPage() {
           {creator?.niche && (
             <p className="text-sm text-warmgray">{creator.niche}</p>
           )}
+          <Button
+            href="/dashboard/creator/profile"
+            variant="outline"
+            className="mt-1 self-start text-xs"
+          >
+            Edit profile
+          </Button>
         </div>
 
         <div className="text-left sm:text-right">
@@ -75,15 +82,10 @@ export default async function CreatorDashboardPage() {
           </p>
         </div>
       </Card>
-      <div className="flex justify-end">
-        <Button href="/dashboard/creator/profile" variant="outline">
-          Edit profile
-        </Button>
-      </div>
       <h1 className="text-2xl font-semibold tracking-tight text-ink">
         Your campaigns
       </h1>
-      {error && <p className="text-sm text-red-600">{error.message}</p>}
+      {error && <p className="text-sm text-error">{error.message}</p>}
 
       {!error && campaigns?.length === 0 && (
         <Card className="flex flex-col items-center gap-3 py-12 text-center">
@@ -102,12 +104,14 @@ export default async function CreatorDashboardPage() {
           <li key={c.id}>
             <Link
               href={`/dashboard/creator/campaigns/${c.id}`}
-              className="flex flex-col gap-1 rounded-md border border-ink/10 bg-white/70 p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-1 rounded-md border border-ink/10 bg-surface p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
             >
               <Badge variant={statusBadgeVariant(c.status)}>
                 {c.status.replace("_", " ")}
               </Badge>
-              <span className="text-sm text-warmgray">₹{c.price}</span>
+              <span className="text-sm text-warmgray">
+                ₹{c.price.toLocaleString("en-IN")}
+              </span>
             </Link>
           </li>
         ))}

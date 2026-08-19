@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Creo",
-  description: "How Creo (Promify) collects, uses, and protects your data.",
+  title: "Privacy Policy | Juncture",
+  description: "How Juncture (Promify) collects, uses, and protects your data.",
 };
 
 // Update this whenever the policy content changes — Google's verification
@@ -12,7 +12,7 @@ const LAST_UPDATED = "August 7, 2026";
 
 // TODO: replace with your real contact email before submitting for
 // Google verification — a working contact method is required.
-const CONTACT_EMAIL = "engineers569@gmail.com";
+const CONTACT_EMAIL = "support@promify-2w87.vercel.app";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
           href="/"
           className="text-lg font-semibold tracking-tight text-ink"
         >
-          Creo
+          Juncture
         </Link>
       </nav>
 
@@ -37,29 +37,30 @@ export default function PrivacyPolicyPage() {
         <div className="mt-10 flex flex-col gap-10 text-ink">
           <Section title="Who we are">
             <p>
-              Creo is a marketplace connecting content creators with brands for
-              paid promotions. This policy explains what information we collect,
-              how we use it, and the choices you have.
+              Juncture (operating as Promify) is a marketplace connecting content
+              creators with brands for paid promotions. This policy explains
+              what information we collect, how we use it, and the choices
+              you have.
             </p>
           </Section>
 
           <Section title="Information we collect">
-            <p>When you use Creo, we collect:</p>
+            <p>When you use Juncture, we collect:</p>
             <ul className="mt-3 list-disc space-y-2 pl-5">
               <li>
-                <strong>Account information</strong> you provide directly, such
-                as your email address, display name, and role (creator or
-                brand).
+                <strong>Account information</strong> you provide directly,
+                such as your email address, display name, and role (creator
+                or brand).
               </li>
               <li>
-                <strong>Profile information</strong> you choose to add, such as
-                your niche, platform handles, and profile links.
+                <strong>Profile information</strong> you choose to add, such
+                as your niche, platform handles, and profile links.
               </li>
               <li>
-                <strong>Platform statistics</strong> you either self-report (for
-                example, Instagram follower counts) or that we retrieve directly
-                from a platform you connect via OAuth, such as your YouTube
-                subscriber count.
+                <strong>Platform statistics</strong> you either self-report
+                (for example, Instagram follower counts) or that we retrieve
+                directly from a platform you connect via OAuth, such as your
+                YouTube subscriber count.
               </li>
               <li>
                 <strong>Campaign and negotiation data</strong>, including
@@ -71,15 +72,16 @@ export default function PrivacyPolicyPage() {
 
           <Section title="Google user data">
             <p>
-              If you connect a YouTube account, Creo requests read-only access
-              to your channel&apos;s public statistics (such as subscriber
-              count) through the YouTube Data API, solely to verify your channel
-              and calculate your creator tier. We do not request access to
-              upload videos, modify your channel, or access private messages.
+              If you connect a YouTube account, Juncture requests read-only
+              access to your channel&apos;s public statistics (such as
+              subscriber count) through the YouTube Data API, solely to
+              verify your channel and calculate your creator tier. We do not
+              request access to upload videos, modify your channel, or
+              access private messages.
             </p>
             <p className="mt-3">
-              Creo&apos;s use and transfer of information received from Google
-              APIs will adhere to the{" "}
+              Juncture&apos;s use and transfer of information received from
+              Google APIs will adhere to the{" "}
               <a
                 href="https://developers.google.com/terms/api-services-user-data-policy"
                 target="_blank"
@@ -91,7 +93,7 @@ export default function PrivacyPolicyPage() {
               , including the Limited Use requirements.
             </p>
             <p className="mt-3">
-              You can revoke Creo&apos;s access to your Google account at any
+              You can revoke Juncture&apos;s access to your Google account at any
               time from your{" "}
               <a
                 href="https://myaccount.google.com/permissions"
@@ -111,20 +113,21 @@ export default function PrivacyPolicyPage() {
             <ul className="list-disc space-y-2 pl-5">
               <li>To operate your account and authenticate your sessions.</li>
               <li>
-                To display your creator profile to brands (or vice versa) for
-                the purpose of arranging paid promotions.
+                To display your creator profile to brands (or vice versa)
+                for the purpose of arranging paid promotions.
               </li>
               <li>
-                To calculate creator tiers based on follower/subscriber counts.
+                To calculate creator tiers based on follower/subscriber
+                counts.
               </li>
               <li>
-                To communicate with you about your account, campaigns, or policy
-                changes.
+                To communicate with you about your account, campaigns, or
+                policy changes.
               </li>
             </ul>
             <p className="mt-3">
-              We do not sell your personal information, and we do not use data
-              obtained via Google APIs for advertising purposes.
+              We do not sell your personal information, and we do not use
+              data obtained via Google APIs for advertising purposes.
             </p>
           </Section>
 
@@ -132,16 +135,17 @@ export default function PrivacyPolicyPage() {
             <p>
               Your data is stored with Supabase, using row-level security
               policies so that users can only access data they&apos;re
-              authorized to see. Authentication tokens for connected platforms
-              are stored securely and are not exposed to the client.
+              authorized to see. Authentication tokens for connected
+              platforms are stored securely and are not exposed to the
+              client.
             </p>
           </Section>
 
           <Section title="Your choices">
             <p>
-              You can update or remove your profile information, disconnect a
-              connected platform account, or request deletion of your account
-              and associated data at any time by contacting us at{" "}
+              You can update or remove your profile information, disconnect
+              a connected platform account, or request deletion of your
+              account and associated data at any time by contacting us at{" "}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
                 className="text-teal underline underline-offset-2 hover:text-teal-hover"
@@ -154,8 +158,9 @@ export default function PrivacyPolicyPage() {
 
           <Section title="Changes to this policy">
             <p>
-              We may update this policy from time to time. Material changes will
-              be reflected by updating the &quot;Last updated&quot; date above.
+              We may update this policy from time to time. Material changes
+              will be reflected by updating the &quot;Last updated&quot;
+              date above.
             </p>
           </Section>
 
@@ -186,7 +191,9 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="text-lg font-semibold tracking-tight text-ink">{title}</h2>
+      <h2 className="text-lg font-semibold tracking-tight text-ink">
+        {title}
+      </h2>
       <div className="mt-3 text-sm leading-relaxed text-warmgray [&_strong]:text-ink">
         {children}
       </div>

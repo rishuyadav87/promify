@@ -27,7 +27,7 @@ export default async function DashboardLayout({
             href="/"
             className="text-lg font-semibold tracking-tight text-ink"
           >
-            Creo
+            Juncture
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />

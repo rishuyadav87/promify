@@ -90,7 +90,9 @@ function SignupForm() {
                   onClick={() => setRole(r)}
                   className={`flex-1 rounded-md border px-3 py-2 text-sm font-medium capitalize transition-colors ${
                     role === r
-                      ? "border-teal bg-teal text-stone"
+                      ? r === "creator"
+                        ? "border-brick bg-brick text-stone"
+                        : "border-teal bg-teal text-stone"
                       : "border-ink/20 text-ink hover:bg-ink/5"
                   }`}
                 >
@@ -145,6 +147,15 @@ function SignupForm() {
           </Button>
         </form>
       </Card>
+      <p className="mt-4 text-center text-sm text-warmgray">
+        Already have an account?{" "}
+        <a
+          href="/login"
+          className="font-medium text-ink underline underline-offset-2"
+        >
+          Log in
+        </a>
+      </p>
     </main>
   );
 }
