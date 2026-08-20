@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,8 +21,15 @@ export default function PrivacyPolicyPage() {
       <nav className="mx-auto flex max-w-3xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight text-ink"
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-ink"
         >
+          <Image
+            src="/logo-icon.png"
+            alt=""
+            width={28}
+            height={28}
+            className="h-7 w-7"
+          />
           Juncture
         </Link>
       </nav>
