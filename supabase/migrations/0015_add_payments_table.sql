@@ -6,7 +6,7 @@
 -- the actual charge. This adds that missing half.
 --
 -- commission_percent is deliberately snapshotted here, per-payment, rather
--- than read fresh from a settings table every time it's needed. Promify
+-- than read fresh from a settings table every time it's needed. Juncture
 -- is launching commission-free and will introduce a rate later -- storing
 -- it at charge time means a future rate change can never retroactively
 -- apply to a campaign that was already agreed and charged under the old
@@ -21,7 +21,7 @@
 -- confirmed, not what a client claims happened.
 create type public.payment_status as enum (
   'created', -- Razorpay order created, brand hasn't paid yet
-  'paid',    -- brand successfully paid, funds held by Promify
+  'paid',    -- brand successfully paid, funds held by Juncture
   'failed',
   'refunded'
 );

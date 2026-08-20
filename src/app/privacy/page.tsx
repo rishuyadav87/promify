@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Juncture",
-  description: "How Juncture (Promify) collects, uses, and protects your data.",
+  description: "How Juncture collects, uses, and protects your data.",
 };
 
 // Update this whenever the policy content changes — Google's verification
@@ -13,7 +13,7 @@ const LAST_UPDATED = "August 7, 2026";
 
 // TODO: replace with your real contact email before submitting for
 // Google verification — a working contact method is required.
-const CONTACT_EMAIL = "support@promify-2w87.vercel.app";
+const CONTACT_EMAIL = "support@Juncture-2w87.vercel.app";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
         <div className="mt-10 flex flex-col gap-10 text-ink">
           <Section title="Who we are">
             <p>
-              Juncture (operating as Promify) is a marketplace connecting content
+              Juncture is a marketplace connecting content
               creators with brands for paid promotions. This policy explains
               what information we collect, how we use it, and the choices
               you have.
