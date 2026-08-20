@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { GoogleIcon } from "@/components/icons/GoogleIcon";
 type Role = "creator" | "brand";
 
 // useSearchParams requires a Suspense boundary in the App Router, or
@@ -121,8 +122,9 @@ function SignupForm() {
             type="button"
             variant="outline"
             onClick={handleGoogleSignIn}
-            className="w-full"
+            className="w-full gap-2"
           >
+            <GoogleIcon />
             Continue with Google as{" "}
             {role === "brand" ? "a brand" : "a creator"}
           </Button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -64,8 +65,9 @@ export default function LoginPage() {
           type="button"
           variant="outline"
           onClick={handleGoogleSignIn}
-          className="w-full"
+          className="w-full gap-2"
         >
+          <GoogleIcon />
           Continue with Google
         </Button>
 
