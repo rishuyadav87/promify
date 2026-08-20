@@ -40,12 +40,40 @@ export default function LoginPage() {
     // entirely.
     window.location.href = "/dashboard";
   }
+  async function handleGoogleSignIn() {
+    setError(null);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // No ?role= param here -- this is the login page, an existing
+        // user's role is already decided. That param only matters on the
+        // signup page's Google button.
+        redirectTo: `${window.location.origin}/auth/callback/oauth-signin`,
+      },
+    });
+  }
+
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 py-16 sm:px-6">
       <Card className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Log in
         </h1>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleGoogleSignIn}
+          className="w-full"
+        >
+          Continue with Google
+        </Button>
+
+        <div className="flex items-center gap-3 text-xs text-warmgray">
+          <div className="h-px flex-1 bg-ink/10" />
+          or
+          <div className="h-px flex-1 bg-ink/10" />
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">

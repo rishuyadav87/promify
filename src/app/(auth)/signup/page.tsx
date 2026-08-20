@@ -60,6 +60,21 @@ function SignupForm() {
     setLoading(false);
   }
 
+  async function handleGoogleSignIn() {
+    setError(null);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // Carries the role choice through the Google round-trip -- the
+        // callback route reads this to correct the account to 'brand' if
+        // needed, since Google sign-in has no other way to pass it
+        // through (unlike the regular signUp() call above, which sends
+        // it as user_metadata directly).
+        redirectTo: `${window.location.origin}/auth/callback/oauth-signin?role=${role}`,
+      },
+    });
+  }
+
   if (checkEmail) {
     return (
       <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 py-16 sm:px-6">
@@ -100,6 +115,22 @@ function SignupForm() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGoogleSignIn}
+            className="w-full"
+          >
+            Continue with Google as{" "}
+            {role === "brand" ? "a brand" : "a creator"}
+          </Button>
+
+          <div className="flex items-center gap-3 text-xs text-warmgray">
+            <div className="h-px flex-1 bg-ink/10" />
+            or sign up with email
+            <div className="h-px flex-1 bg-ink/10" />
           </div>
 
           <div className="flex flex-col gap-1.5">
