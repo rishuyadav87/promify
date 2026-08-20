@@ -26,9 +26,9 @@ export default function PrivacyPolicyPage() {
           <Image
             src="/logo-icon.png"
             alt=""
-            width={28}
-            height={28}
-            className="h-7 w-7"
+            width={56}
+            height={56}
+            className="h-12 w-12"
           />
           Juncture
         </Link>

@@ -16,9 +16,9 @@ export default async function HomePage() {
           <Image
             src="/logo-icon.png"
             alt=""
-            width={32}
-            height={32}
-            className="h-8 w-8"
+            width={64}
+            height={64}
+            className="h-14 w-14"
           />
           Juncture
         </span>
