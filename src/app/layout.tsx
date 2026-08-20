@@ -38,6 +38,21 @@ const monoFont = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Juncture",
   description: "Connecting content creators with brands for paid promotions.",
+  // Registers the full favicon package (multiple sizes, Apple touch icon,
+  // Android/PWA icons via the manifest) the App-Router-idiomatic way --
+  // this is the metadata equivalent of the <link rel="icon" ...> tags a
+  // traditional HTML <head> would use, and Next.js renders the correct
+  // tags into <head> automatically from this.
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export const viewport: Viewport = {
