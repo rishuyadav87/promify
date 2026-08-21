@@ -40,10 +40,27 @@ export function AuthSyncListener() {
 
         const newUserId = session?.user?.id ?? null;
 
-        if (currentUserId.current !== newUserId) {
+        // Only force this tab to /login when its session silently swapped
+        // to a DIFFERENT logged-in account underneath it -- e.g. someone
+        // signed into another account in a second tab while this tab was
+        // still showing the previous account's dashboard data on screen.
+        // A session simply expiring or a normal sign-out (newUserId is
+        // null) is NOT treated as a hostile switch: that's just "logged
+        // out," and forcing every open tab -- including someone just
+        // browsing the marketing homepage with a stale old cookie -- over
+        // to /login for that is disruptive and unnecessary. The page will
+        // already reflect the logged-out state correctly on its own.
+        if (
+          currentUserId.current !== null &&
+          newUserId !== null &&
+          currentUserId.current !== newUserId
+        ) {
           currentUserId.current = newUserId;
           window.location.href = "/login";
+          return;
         }
+
+        currentUserId.current = newUserId;
       },
     );
 
