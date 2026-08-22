@@ -53,6 +53,13 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
     profile.youtube_monetized,
   );
 
+  const label = profile.platform === "youtube" ? "YouTube" : "Instagram";
+  const connectHref =
+    profile.platform === "youtube"
+      ? "/auth/connect/google"
+      : "/auth/connect/instagram";
+  const countNoun = profile.platform === "youtube" ? "subscriber" : "follower";
+
   return (
     <Card className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
@@ -74,6 +81,32 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
           </a>
         )}
       </div>
+
+      {/*
+        Unverified/manual profiles always lead with the Connect option --
+        same shape as AddPlatformForm -- so verifying is never more than
+        one click away, even after a manual entry already exists.
+      */}
+      {!profile.oauth_connected && (
+        <>
+          <div className="flex flex-col gap-1.5">
+            <Button href={connectHref} variant="primary" className="self-start">
+              Connect {label}
+            </Button>
+            <p className="text-xs text-warmgray">
+              Verified instantly with a "Verified" badge, using your real{" "}
+              {countNoun} count from {label}. You won't be able to edit that
+              number yourself afterward.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 text-xs text-warmgray">
+            <div className="h-px flex-1 bg-ink/10" />
+            or edit manually
+            <div className="h-px flex-1 bg-ink/10" />
+          </div>
+        </>
+      )}
 
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="creator_id" value={profile.id} />
@@ -259,6 +292,15 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 
         <SaveButton />
       </form>
+
+      {!profile.oauth_connected && (
+        <p className="text-xs text-warmgray">
+          Manually added profiles need admin approval before brands can see
+          them — you'll show as "Pending review" until then. Connect {label}{" "}
+          instead (or anytime afterward) to skip review entirely, since that
+          data is already confirmed.
+        </p>
+      )}
     </Card>
   );
 }
