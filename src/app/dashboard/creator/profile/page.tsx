@@ -95,23 +95,27 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
     <div key={profile.id} className="flex flex-col gap-3">
       <EditProfileForm profile={profile} />
         {profile.platform === "instagram" && !hasVerifiedInstagram && (
-          <Card className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-ink">
-              Verify your Instagram channel
-            </h2>
-            <p className="text-sm text-warmgray">
-              Your follower count is currently self-reported. Verify with
-              Instagram to replace it with your real, Meta-confirmed count.
-            </p>
-            <Button
-              href="/auth/connect/instagram"
-              variant="primary"
-              className="self-start"
-            >
-              Verify Instagram
-            </Button>
-          </Card>
-        )}
+  <Card className="flex flex-col gap-3">
+    <h2 className="text-base font-semibold text-ink">
+      Verify your Instagram account.
+    </h2>
+    <p className="text-sm text-warmgray">
+      Your follower count is currently self-reported, and needs admin
+      approval before brands can see it.
+    </p>
+    <Button
+      href="/auth/connect/instagram"
+      variant="primary"
+      className="self-start"
+    >
+      Connect Instagram
+    </Button>
+    <p className="text-xs text-warmgray">
+      Connecting replaces it with your real, Meta-confirmed count and skips
+      review entirely.
+    </p>
+  </Card>
+)}
         {/* {!youtubeProfile && (
   <Card className="flex flex-col gap-3">
     <h2 className="text-base font-semibold text-ink">
@@ -132,10 +136,11 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
           <h2 className="text-base font-semibold text-ink">
             Verify your YouTube channel
           </h2>
-          <p className="text-sm text-warmgray">
-            Your subscriber count is currently self-reported. Verify with
-            Google to replace it with your real, Google-confirmed count.
-          </p>
+            <p className="text-sm text-warmgray">
+      Your subscriber count is currently self-reported, and needs admin
+      approval before brands can see it. Verify with Google to replace it
+      with your real, Google-confirmed count and skip review entirely.
+    </p>
           <Button href="/auth/connect/google" variant="primary" className="self-start">
             Verify YouTube
           </Button>
