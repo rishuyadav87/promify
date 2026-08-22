@@ -107,21 +107,8 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
 <div className="flex flex-col gap-6">
   {profiles?.map((profile) => (
     <div key={profile.id} className="flex flex-col gap-3">
-      {profile.platform === "youtube" && !hasVerifiedYoutube && (
-        <Card className="flex flex-col gap-3">
-          <h2 className="text-base font-semibold text-ink">
-            Verify your YouTube channel
-          </h2>
-          <p className="text-sm text-warmgray">
-            Your subscriber count is currently self-reported. Verify with
-            Google to replace it with your real, Google-confirmed count.
-          </p>
-          <Button href="/auth/connect/google" variant="primary" className="self-start">
-            Verify YouTube
-          </Button>
-        </Card>
-      )}
-              {profile.platform === "instagram" && !hasVerifiedInstagram && (
+      <EditProfileForm profile={profile} />
+        {profile.platform === "instagram" && !hasVerifiedInstagram && (
           <Card className="flex flex-col gap-3">
             <h2 className="text-base font-semibold text-ink">
               Verify your Instagram channel
@@ -139,11 +126,25 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
             </Button>
           </Card>
         )}
-      <EditProfileForm profile={profile} />
+      {profile.platform === "youtube" && !hasVerifiedYoutube && (
+        <Card className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold text-ink">
+            Verify your YouTube channel
+          </h2>
+          <p className="text-sm text-warmgray">
+            Your subscriber count is currently self-reported. Verify with
+            Google to replace it with your real, Google-confirmed count.
+          </p>
+          <Button href="/auth/connect/google" variant="primary" className="self-start">
+            Verify YouTube
+          </Button>
+        </Card>
+      )}
+            
+      
     </div>
   ))}
 </div>
-
       {connectedPlatforms.length < 2 && (
         <AddPlatformForm
           excludePlatform={
