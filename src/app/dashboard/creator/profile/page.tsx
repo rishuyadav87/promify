@@ -71,7 +71,7 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
     <p className="text-sm text-error">{searchParams.message}</p>
   </Card>
 )}
-{!instagramProfile && (
+{/* {!instagramProfile && (
   <Card className="flex flex-col gap-3">
     <h2 className="text-base font-semibold text-ink">
       Connect your Instagram channel
@@ -88,7 +88,7 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
       Connect Instagram
     </Button>
   </Card>
-)}
+)} */}
      
 <div className="flex flex-col gap-6">
   {profiles?.map((profile) => (
@@ -112,7 +112,7 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
             </Button>
           </Card>
         )}
-        {!youtubeProfile && (
+        {/* {!youtubeProfile && (
   <Card className="flex flex-col gap-3">
     <h2 className="text-base font-semibold text-ink">
       Connect your YouTube channel
@@ -125,7 +125,7 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
       Connect YouTube
     </Button>
   </Card>
-)}
+)} */}
 
       {profile.platform === "youtube" && !hasVerifiedYoutube && (
         <Card className="flex flex-col gap-3">
