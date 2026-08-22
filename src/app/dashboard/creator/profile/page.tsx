@@ -26,8 +26,12 @@ export default async function CreatorProfilePage({
     .order("platform");
 
   const connectedPlatforms = (profiles ?? []).map((p) => p.platform);
-  const hasYoutube = connectedPlatforms.includes("youtube");
-
+const youtubeProfile = (profiles ?? []).find((p) => p.platform === "youtube");
+// A YouTube row can exist without ever having gone through Google's OAuth
+// flow (e.g. added manually via "Add another platform" with a self-reported
+// subscriber count). Only treat YouTube as "handled" once it's actually
+// been verified through OAuth — otherwise keep showing the connect prompt.
+const hasVerifiedYoutube = youtubeProfile?.oauth_connected === true;
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -50,24 +54,27 @@ export default async function CreatorProfilePage({
         </Card>
       )}
 
-      {!hasYoutube && (
-        <Card className="flex flex-col gap-3">
-          <h2 className="text-base font-semibold text-ink">
-            Connect your YouTube channel
-          </h2>
-          <p className="text-sm text-warmgray">
-            Verify your channel with Google to automatically sync your real
-            subscriber count instead of entering it manually.
-          </p>
-          <Button
-            href="/auth/connect/google"
-            variant="primary"
-            className="self-start"
-          >
-            Connect YouTube
-          </Button>
-        </Card>
-      )}
+      {!hasVerifiedYoutube && (
+  <Card className="flex flex-col gap-3">
+    <h2 className="text-base font-semibold text-ink">
+      {youtubeProfile
+        ? "Verify your YouTube channel"
+        : "Connect your YouTube channel"}
+    </h2>
+    <p className="text-sm text-warmgray">
+      {youtubeProfile
+        ? "Your subscriber count is currently self-reported. Verify with Google to replace it with your real, Google-confirmed count."
+        : "Verify your channel with Google to automatically sync your real subscriber count instead of entering it manually."}
+    </p>
+    <Button
+      href="/auth/connect/google"
+      variant="primary"
+      className="self-start"
+    >
+      {youtubeProfile ? "Verify YouTube" : "Connect YouTube"}
+    </Button>
+  </Card>
+)}
 
       <div className="flex flex-col gap-6">
         {profiles?.map((profile) => (
