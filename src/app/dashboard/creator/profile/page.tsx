@@ -54,33 +54,42 @@ const hasVerifiedYoutube = youtubeProfile?.oauth_connected === true;
         </Card>
       )}
 
-      {!hasVerifiedYoutube && (
+     {!youtubeProfile && (
   <Card className="flex flex-col gap-3">
     <h2 className="text-base font-semibold text-ink">
-      {youtubeProfile
-        ? "Verify your YouTube channel"
-        : "Connect your YouTube channel"}
+      Connect your YouTube channel
     </h2>
     <p className="text-sm text-warmgray">
-      {youtubeProfile
-        ? "Your subscriber count is currently self-reported. Verify with Google to replace it with your real, Google-confirmed count."
-        : "Verify your channel with Google to automatically sync your real subscriber count instead of entering it manually."}
+      Verify with Google to automatically sync your real subscriber count
+      instead of entering it manually.
     </p>
-    <Button
-      href="/auth/connect/google"
-      variant="primary"
-      className="self-start"
-    >
-      {youtubeProfile ? "Verify YouTube" : "Connect YouTube"}
+    <Button href="/auth/connect/google" variant="primary" className="self-start">
+      Connect YouTube
     </Button>
   </Card>
 )}
 
-      <div className="flex flex-col gap-6">
-        {profiles?.map((profile) => (
-          <EditProfileForm key={profile.id} profile={profile} />
-        ))}
-      </div>
+<div className="flex flex-col gap-6">
+  {profiles?.map((profile) => (
+    <div key={profile.id} className="flex flex-col gap-3">
+      {profile.platform === "youtube" && !hasVerifiedYoutube && (
+        <Card className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold text-ink">
+            Verify your YouTube channel
+          </h2>
+          <p className="text-sm text-warmgray">
+            Your subscriber count is currently self-reported. Verify with
+            Google to replace it with your real, Google-confirmed count.
+          </p>
+          <Button href="/auth/connect/google" variant="primary" className="self-start">
+            Verify YouTube
+          </Button>
+        </Card>
+      )}
+      <EditProfileForm profile={profile} />
+    </div>
+  ))}
+</div>
 
       {connectedPlatforms.length < 2 && (
         <AddPlatformForm
