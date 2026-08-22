@@ -89,21 +89,7 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
     </Button>
   </Card>
 )}
-     {!youtubeProfile && (
-  <Card className="flex flex-col gap-3">
-    <h2 className="text-base font-semibold text-ink">
-      Connect your YouTube channel
-    </h2>
-    <p className="text-sm text-warmgray">
-      Verify with Google to automatically sync your real subscriber count
-      instead of entering it manually.
-    </p>
-    <Button href="/auth/connect/google" variant="primary" className="self-start">
-      Connect YouTube
-    </Button>
-  </Card>
-)}
-
+     
 <div className="flex flex-col gap-6">
   {profiles?.map((profile) => (
     <div key={profile.id} className="flex flex-col gap-3">
@@ -126,6 +112,21 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
             </Button>
           </Card>
         )}
+        {!youtubeProfile && (
+  <Card className="flex flex-col gap-3">
+    <h2 className="text-base font-semibold text-ink">
+      Connect your YouTube channel
+    </h2>
+    <p className="text-sm text-warmgray">
+      Verify with Google to automatically sync your real subscriber count
+      instead of entering it manually.
+    </p>
+    <Button href="/auth/connect/google" variant="primary" className="self-start">
+      Connect YouTube
+    </Button>
+  </Card>
+)}
+
       {profile.platform === "youtube" && !hasVerifiedYoutube && (
         <Card className="flex flex-col gap-3">
           <h2 className="text-base font-semibold text-ink">
@@ -153,5 +154,6 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
         />
       )}
     </div>
+    
   );
 }
