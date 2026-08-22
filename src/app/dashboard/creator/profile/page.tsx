@@ -146,13 +146,8 @@ const hasVerifiedInstagram = instagramProfile?.oauth_connected === true;
     </div>
   ))}
 </div>
-      {connectedPlatforms.length < 2 && (
-        <AddPlatformForm
-          excludePlatform={
-            connectedPlatforms[0] as "instagram" | "youtube" | undefined
-          }
-        />
-      )}
+     {!instagramProfile && <AddPlatformForm platform="instagram" />}
+{!youtubeProfile && <AddPlatformForm platform="youtube" />}
     </div>
     
   );

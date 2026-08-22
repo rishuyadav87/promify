@@ -17,65 +17,64 @@ function AddButton() {
       disabled={pending}
       className="self-start"
     >
-      {pending ? "Adding…" : "Add platform"}
+      {pending ? "Adding…" : "Add manually"}
     </Button>
   );
 }
 
+// One of these renders per platform the creator hasn't added yet (never
+// both platforms in one form with a dropdown -- each platform has its own
+// OAuth connect route, so it needs its own card to offer that alongside
+// the manual fallback).
 export function AddPlatformForm({
-  excludePlatform,
+  platform,
 }: {
-  excludePlatform?: "instagram" | "youtube";
+  platform: "instagram" | "youtube";
 }) {
   const [state, formAction] = useFormState(addCreatorPlatform, { error: null });
+  const label = platform === "youtube" ? "YouTube" : "Instagram";
+  const connectHref =
+    platform === "youtube" ? "/auth/connect/google" : "/auth/connect/instagram";
 
   return (
     <Card className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-base font-semibold text-ink">
-          Add another platform
-        </h2>
+            <div>
+        <h2 className="text-base font-semibold text-ink">Add {label}</h2>
         <p className="mt-1 text-sm text-warmgray">
-          List a second platform to be booked for separately.
+          Choose how to add your {label} profile — each option affects how
+          your follower count is shown to brands.
         </p>
       </div>
 
+      <div className="flex flex-col gap-1.5">
+        <Button href={connectHref} variant="primary" className="self-start">
+          Connect {label}
+        </Button>
+        <p className="text-xs text-warmgray">
+          Verified instantly with a "Verified" badge, using your real
+          follower count from {platform === "youtube" ? "Google" : "Instagram"}
+          . You won't be able to edit that number yourself afterward.
+        </p>
+      </div>
+
+      <div className="flex items-center gap-3 text-xs text-warmgray">
+        <div className="h-px flex-1 bg-ink/10" />
+        or add manually
+        <div className="h-px flex-1 bg-ink/10" />
+      </div>
+
       <form action={formAction} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="new_platform"
-            className="text-sm font-medium text-ink"
-          >
-            Platform
-          </label>
-          <select
-            id="new_platform"
-            name="platform"
-            defaultValue=""
-            required
-            className={inputClasses}
-          >
-            <option value="" disabled>
-              Choose a platform
-            </option>
-            {excludePlatform !== "instagram" && (
-              <option value="instagram">Instagram</option>
-            )}
-            {excludePlatform !== "youtube" && (
-              <option value="youtube">YouTube</option>
-            )}
-          </select>
-        </div>
+        <input type="hidden" name="platform" value={platform} />
 
         <div className="flex flex-col gap-1.5">
           <label
-            htmlFor="new_display_name"
+            htmlFor={`new_display_name_${platform}`}
             className="text-sm font-medium text-ink"
           >
             Display name
           </label>
           <input
-            id="new_display_name"
+            id={`new_display_name_${platform}`}
             name="display_name"
             required
             className={inputClasses}
@@ -83,11 +82,14 @@ export function AddPlatformForm({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="new_handle" className="text-sm font-medium text-ink">
+          <label
+            htmlFor={`new_handle_${platform}`}
+            className="text-sm font-medium text-ink"
+          >
             Handle
           </label>
           <input
-            id="new_handle"
+            id={`new_handle_${platform}`}
             name="handle"
             required
             className={inputClasses}
@@ -98,6 +100,12 @@ export function AddPlatformForm({
 
         <AddButton />
       </form>
+                  <p className="text-xs text-warmgray">
+        Manually added profiles need admin approval before brands can see
+        them — you'll show as "Pending review" until then. Connect{" "}
+        {label} instead (or anytime afterward) to skip review entirely,
+        since that data is already confirmed.
+      </p>
     </Card>
   );
 }

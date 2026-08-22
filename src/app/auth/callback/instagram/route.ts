@@ -141,15 +141,18 @@ export async function GET(request: NextRequest) {
 
   const tier = getEligibleTier("instagram", followerCount);
 
-  const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
-    user_id: user.id,
-    platform: "instagram",
-    display_name: existing?.display_name ?? handle,
-    handle,
-    follower_count: followerCount,
-    oauth_connected: true,
-    tier,
-  };
+ const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
+  user_id: user.id,
+  platform: "instagram",
+  display_name: existing?.display_name ?? handle,
+  handle,
+  follower_count: followerCount,
+  oauth_connected: true,
+   // OAuth-verified data is already confirmed real, unlike a manual entry —
+  // skip the admin review queue for these.
+  approved: true,
+  tier,
+};
 
   // Service-role write, same reasoning as the YouTube callback: migration
   // 0018 now blocks a normal user session from writing oauth_connected or

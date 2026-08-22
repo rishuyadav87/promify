@@ -133,16 +133,19 @@ export async function GET(request: NextRequest) {
   const youtubeMonetized = existing?.youtube_monetized ?? false;
   const tier = getEligibleTier("youtube", subscriberCount, youtubeMonetized);
 
-  const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
-    user_id: user.id,
-    platform: "youtube",
-    display_name: displayName,
-    handle,
-    follower_count: subscriberCount,
-    oauth_connected: true,
-    youtube_monetized: youtubeMonetized,
-    tier,
-  };
+ const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
+  user_id: user.id,
+  platform: "youtube",
+  display_name: displayName,
+  handle,
+  follower_count: subscriberCount,
+  oauth_connected: true,
+   // OAuth-verified data is already confirmed real, unlike a manual entry —
+  // skip the admin review queue for these.
+  approved: true,
+  youtube_monetized: youtubeMonetized,
+  tier,
+};
 
   // This specific write uses the service-role client, not the regular
   // session client used everywhere else in this route. It's the one
