@@ -13,7 +13,7 @@ const LAST_UPDATED = "August 7, 2026";
 
 // TODO: replace with your real contact email before submitting for
 // Google verification — a working contact method is required.
-const CONTACT_EMAIL = "support@Juncture-2w87.vercel.app";
+const CONTACT_EMAIL = "support@juncture.co.in";
 
 export default function PrivacyPolicyPage() {
   return (
