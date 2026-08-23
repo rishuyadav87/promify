@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get("code");
   const returnedState = searchParams.get("state");
-  const fbError = searchParams.get("error");
+  const igError = searchParams.get("error");
 
-  if (fbError) {
+  if (igError) {
     return redirectWithMessage(
       request,
       "error",
@@ -55,19 +55,22 @@ export async function GET(request: NextRequest) {
     request.url,
   ).toString();
 
-  // Exchange the authorization code for a user access token.
-  const tokenUrl = new URL(
-    "https://graph.facebook.com/v21.0/oauth/access_token",
-  );
-  tokenUrl.searchParams.set("client_id", process.env.INSTAGRAM_CLIENT_ID!);
-  tokenUrl.searchParams.set(
-    "client_secret",
-    process.env.INSTAGRAM_CLIENT_SECRET!,
-  );
-  tokenUrl.searchParams.set("redirect_uri", redirectUri);
-  tokenUrl.searchParams.set("code", code);
+  // Step 1: exchange the code for a short-lived Instagram user access token.
+  // Instagram's token endpoint expects a form-encoded POST body, not JSON.
+  const tokenBody = new URLSearchParams({
+    client_id: process.env.INSTAGRAM_CLIENT_ID!,
+    client_secret: process.env.INSTAGRAM_CLIENT_SECRET!,
+    grant_type: "authorization_code",
+    redirect_uri: redirectUri,
+    code,
+  });
 
-  const tokenRes = await fetch(tokenUrl.toString());
+  const tokenRes = await fetch("https://api.instagram.com/oauth/access_token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: tokenBody,
+  });
+
   if (!tokenRes.ok) {
     return redirectWithMessage(
       request,
@@ -76,7 +79,11 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const tokenData = (await tokenRes.json()) as { access_token?: string };
+  const tokenData = (await tokenRes.json()) as {
+    access_token?: string;
+    user_id?: string;
+  };
+
   if (!tokenData.access_token) {
     return redirectWithMessage(
       request,
@@ -85,46 +92,17 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // An Instagram Business account can only be reached through its linked
-  // Facebook Page — there's no way to query it directly by the user's own
-  // token, so we look up which Page(s) this user manages first.
-  const pagesRes = await fetch(
-    `https://graph.facebook.com/v21.0/me/accounts?fields=instagram_business_account&access_token=${tokenData.access_token}`,
-  );
-
-  if (!pagesRes.ok) {
-    return redirectWithMessage(
-      request,
-      "error",
-      "Couldn't read your Facebook Pages. Please try again.",
-    );
-  }
-
-  const pagesData = await pagesRes.json();
-  const pageWithInstagram = (pagesData.data ?? []).find(
-    (page: { instagram_business_account?: { id: string } }) =>
-      page.instagram_business_account?.id,
-  );
-
-  const igUserId = pageWithInstagram?.instagram_business_account?.id;
-
-  if (!igUserId) {
-    return redirectWithMessage(
-      request,
-      "error",
-      "No Instagram Business account found. Make sure your Instagram is set to Business, and linked to a Facebook Page.",
-    );
-  }
-
+  // Step 2: fetch the profile directly -- no Facebook Page lookup needed
+  // with this flow, unlike the old Facebook-Login-based Instagram API.
   const igRes = await fetch(
-    `https://graph.facebook.com/v21.0/${igUserId}?fields=username,followers_count&access_token=${tokenData.access_token}`,
+    `https://graph.instagram.com/me?fields=user_id,username,followers_count&access_token=${tokenData.access_token}`,
   );
 
   if (!igRes.ok) {
     return redirectWithMessage(
       request,
       "error",
-      "Couldn't read your Instagram profile. Please try again.",
+      "Couldn't read your Instagram profile. Make sure it's set to a Business account.",
     );
   }
 
@@ -141,22 +119,19 @@ export async function GET(request: NextRequest) {
 
   const tier = getEligibleTier("instagram", followerCount);
 
- const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
-  user_id: user.id,
-  platform: "instagram",
-  display_name: existing?.display_name ?? handle,
-  handle,
-  follower_count: followerCount,
-  oauth_connected: true,
-   // OAuth-verified data is already confirmed real, unlike a manual entry —
-  // skip the admin review queue for these.
-  approved: true,
-  tier,
-};
+  const creatorUpsert: Database["public"]["Tables"]["creators"]["Insert"] = {
+    user_id: user.id,
+    platform: "instagram",
+    display_name: existing?.display_name ?? handle,
+    handle,
+    follower_count: followerCount,
+    oauth_connected: true,
+    // OAuth-verified data is already confirmed real, unlike a manual
+    // entry -- skip the admin review queue for these.
+    approved: true,
+    tier,
+  };
 
-  // Service-role write, same reasoning as the YouTube callback: migration
-  // 0018 now blocks a normal user session from writing oauth_connected or
-  // follower_count on an Instagram row directly.
   const serviceRoleClient = createServiceRoleClient();
   const { error } = await serviceRoleClient
     .from("creators")

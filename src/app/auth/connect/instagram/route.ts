@@ -2,11 +2,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { randomBytes } from "crypto";
 import { createClient } from "@/lib/supabase/server";
 
-// Kicks off the "Connect Instagram" flow via Facebook Login for Business —
-// Instagram Business accounts are only reachable through a linked Facebook
-// Page, so this goes through Facebook's OAuth dialog, not Instagram's own.
-// Mirrors src/app/auth/connect/google/route.ts, including the CSRF `state`
-// cookie pattern.
+// Kicks off "Connect Instagram" via Business Login for Instagram — Meta's
+// current, direct Instagram login flow (instagram.com, not facebook.com).
+// This replaced the old Facebook-Login-based Instagram integration; it
+// uses its own separate Instagram App ID/Secret (from App Dashboard ->
+// Instagram -> API setup with Instagram login), not the main Meta App ID.
 export async function GET(request: NextRequest) {
   const supabase = createClient();
   const {
@@ -33,17 +33,14 @@ export async function GET(request: NextRequest) {
     request.url,
   ).toString();
 
-  const fbUrl = new URL("https://www.facebook.com/v21.0/dialog/oauth");
-  fbUrl.searchParams.set("client_id", process.env.INSTAGRAM_CLIENT_ID!);
-  fbUrl.searchParams.set("redirect_uri", redirectUri);
-  fbUrl.searchParams.set("response_type", "code");
-  fbUrl.searchParams.set(
-    "scope",
-    "instagram_basic,pages_show_list,pages_read_engagement",
-  );
-  fbUrl.searchParams.set("state", state);
+  const igUrl = new URL("https://www.instagram.com/oauth/authorize");
+  igUrl.searchParams.set("client_id", process.env.INSTAGRAM_CLIENT_ID!);
+  igUrl.searchParams.set("redirect_uri", redirectUri);
+  igUrl.searchParams.set("response_type", "code");
+  igUrl.searchParams.set("scope", "instagram_business_basic");
+  igUrl.searchParams.set("state", state);
 
-  const response = NextResponse.redirect(fbUrl);
+  const response = NextResponse.redirect(igUrl);
   response.cookies.set("instagram_oauth_state", state, {
     httpOnly: true,
     secure: true,
