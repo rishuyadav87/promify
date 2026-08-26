@@ -2,7 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
+import {
+  notifyCounterOffer,
+  notifyOfferResolved,
+  notifyDisputeRaised,
+  notifyIfDisputeResolved,
+} from "@/lib/notifications";
 type ActionState = { error: string | null };
 
 async function resolveParty(campaignId: string) {
@@ -72,6 +77,14 @@ export async function counterOffer(
   });
   if (error) return { error: error.message };
 
+  await notifyCounterOffer({
+    campaignId,
+    brandId: campaign.brand_id,
+    creatorId: campaign.creator_id,
+    offeredBy: party,
+    amount: Math.round(amount),
+  });
+
   revalidateCampaign(campaignId);
   return { error: null };
 }
@@ -111,16 +124,23 @@ export async function acceptOffer(
     return { error: "Waiting for the other side to respond to your offer." };
   }
 
-  const { error } = await supabase
+    const { error } = await supabase
     .from("campaigns")
     .update({ status: "accepted", price: Math.round(latestOffer.amount) })
     .eq("id", campaignId);
   if (error) return { error: error.message };
 
+  await notifyOfferResolved({
+    campaignId,
+    brandId: campaign.brand_id,
+    creatorId: campaign.creator_id,
+    actedBy: party,
+    status: "accepted",
+  });
+
   revalidateCampaign(campaignId);
   return { error: null };
 }
-
 export async function declineCampaign(
   prevState: ActionState,
   formData: FormData,
@@ -129,16 +149,24 @@ export async function declineCampaign(
 
   const resolved = await resolveParty(campaignId);
   if ("error" in resolved) return { error: resolved.error ?? null };
-  const { supabase, campaign } = resolved;
+ const { supabase, campaign, party } = resolved;
 
   if (campaign.status !== "pending")
     return { error: "This campaign is no longer open." };
 
-  const { error } = await supabase
+    const { error } = await supabase
     .from("campaigns")
     .update({ status: "declined" })
     .eq("id", campaignId);
   if (error) return { error: error.message };
+
+  await notifyOfferResolved({
+    campaignId,
+    brandId: campaign.brand_id,
+    creatorId: campaign.creator_id,
+    actedBy: party,
+    status: "declined",
+  });
 
   revalidateCampaign(campaignId);
   return { error: null };
@@ -220,11 +248,17 @@ export async function confirmSatisfaction(
   // integrated -- so for now this only moves the campaign to 'completed'.
   // Once Razorpay/payouts are live, this is the natural place to also
   // insert the real payouts row for this campaign.
-  const { error } = await supabase
+   const { error } = await supabase
     .from("campaigns")
     .update({ status: "completed" })
     .eq("id", campaignId);
   if (error) return { error: error.message };
+
+  await notifyIfDisputeResolved({
+    campaignId,
+    brandId: campaign.brand_id,
+    creatorId: campaign.creator_id,
+  });
 
   revalidateCampaign(campaignId);
   return { error: null };
@@ -261,11 +295,18 @@ export async function openDispute(
     .insert({ campaign_id: campaignId, reason });
   if (disputeError) return { error: disputeError.message };
 
-  const { error: statusError } = await supabase
+   const { error: statusError } = await supabase
     .from("campaigns")
     .update({ status: "disputed" })
     .eq("id", campaignId);
   if (statusError) return { error: statusError.message };
+
+  await notifyDisputeRaised({
+    campaignId,
+    brandId: campaign.brand_id,
+    creatorId: campaign.creator_id,
+    reason,
+  });
 
   revalidateCampaign(campaignId);
   revalidatePath("/dashboard/admin");

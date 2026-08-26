@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
+import { notifyNewBooking } from "@/lib/notifications";
 type ActionState = { error: string | null };
 
 export async function bookCreator(
@@ -46,24 +46,36 @@ export async function bookCreator(
     }
   }
 
-  const { data: brand } = await supabase
+   const { data: brand } = await supabase
     .from("brands")
     .select("id")
     .eq("user_id", user.id)
     .single();
   if (!brand) return { error: "Only brand accounts can book creators." };
 
-  const { error } = await supabase.from("campaigns").insert({
-    brand_id: brand.id,
-    creator_id: creatorId,
-    status: "pending",
-    price: Math.round(price),
-    expected_range_low: Math.round(expectedLow),
-    expected_range_high: Math.round(expectedHigh),
-    brief,
-  });
+  const { data: newCampaign, error } = await supabase
+    .from("campaigns")
+    .insert({
+      brand_id: brand.id,
+      creator_id: creatorId,
+      status: "pending",
+      price: Math.round(price),
+      expected_range_low: Math.round(expectedLow),
+      expected_range_high: Math.round(expectedHigh),
+      brief,
+    })
+    .select("id")
+    .single();
 
   if (error) return { error: error.message };
 
-  redirect("/dashboard/brand?booked=1");
-}
+  if (newCampaign?.id) {
+    await notifyNewBooking({
+      creatorId,
+      brandId: brand.id,
+      price: Math.round(price),
+      campaignId: newCampaign.id,
+    });
+  }
+
+  redirect("/dashboard/brand?booked=1");}

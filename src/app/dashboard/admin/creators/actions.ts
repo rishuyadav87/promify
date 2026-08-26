@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
+import { notifyCreatorApproved } from "@/lib/notifications";
 async function requireAdmin() {
   const supabase = createClient();
   const {
@@ -30,12 +30,20 @@ export async function setCreatorApproval(
   }
   const { supabase } = result;
 
-  const { error } = await supabase
+  const { data: updated, error } = await supabase
     .from("creators")
     .update({ approved })
-    .eq("id", creatorId);
+    .eq("id", creatorId)
+    .select("user_id")
+    .single();
 
   if (error) throw new Error(error.message);
+
+  // Only notify on approval, not on unapproving -- there's no
+  // "your profile was unapproved" email in scope right now.
+  if (approved && updated?.user_id) {
+    await notifyCreatorApproved(updated.user_id);
+  }
 
   revalidatePath("/dashboard/admin/creators");
 }
