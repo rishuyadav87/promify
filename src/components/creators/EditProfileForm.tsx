@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { updateCreatorProfile } from "@/app/dashboard/creator/profile/actions";
 import { getPriceBand } from "@/lib/pricing";
-
+import { OAUTH_LIVE } from "@/lib/oauthAvailability";
 type Profile = {
   id: string;
   display_name: string;
@@ -58,6 +58,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
     profile.platform === "youtube"
       ? "/auth/connect/google"
       : "/auth/connect/instagram";
+        const oauthLive = OAUTH_LIVE[profile.platform];
   const countNoun = profile.platform === "youtube" ? "subscriber" : "follower";
 
   return (
@@ -86,7 +87,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
         same shape as AddPlatformForm -- so verifying is never more than
         one click away, even after a manual entry already exists.
       */}
-      {!profile.oauth_connected && (
+           {!profile.oauth_connected && oauthLive && (
         <>
           <div className="flex flex-col gap-1.5">
             <Button href={connectHref} variant="primary" className="self-start">
@@ -292,12 +293,11 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
         <SaveButton />
       </form>
 
-      {!profile.oauth_connected && (
+            {!profile.oauth_connected && (
         <p className="text-xs text-warmgray">
-          Manually added profiles need admin approval before brands can see
-          them — you'll show as "Pending review" until then. Connect {label}{" "}
-          instead (or anytime afterward) to skip review entirely, since that
-          data is already confirmed.
+          {oauthLive
+            ? `Manually added profiles need admin approval before brands can see them — you'll show as "Pending review" until then. Connect ${label} instead (or anytime afterward) to skip review entirely, since that data is already confirmed.`
+            : `This profile needs a quick admin approval before brands can see it — you'll show as "Pending review" until then, usually reviewed within a day.`}
         </p>
       )}
     </Card>

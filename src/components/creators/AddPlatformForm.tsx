@@ -4,7 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { addCreatorPlatform } from "@/app/dashboard/creator/profile/actions";
-
+import { OAUTH_LIVE } from "@/lib/oauthAvailability";
 const inputClasses =
   "rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
 
@@ -35,7 +35,7 @@ export function AddPlatformForm({
   const label = platform === "youtube" ? "YouTube" : "Instagram";
   const connectHref =
     platform === "youtube" ? "/auth/connect/google" : "/auth/connect/instagram";
-
+  const oauthLive = OAUTH_LIVE[platform];
   return (
     <Card className="flex flex-col gap-4">
             <div>
@@ -46,22 +46,27 @@ export function AddPlatformForm({
         </p>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Button href={connectHref} variant="primary" className="self-start">
-          Connect {label}
-        </Button>
-        <p className="text-xs text-warmgray">
-          Verified instantly with a "Verified" badge, using your real
-          follower count from {platform === "youtube" ? "Google" : "Instagram"}
-          . You won't be able to edit that number yourself afterward.
-        </p>
-      </div>
+           {oauthLive && (
+        <>
+          <div className="flex flex-col gap-1.5">
+            <Button href={connectHref} variant="primary" className="self-start">
+              Connect {label}
+            </Button>
+            <p className="text-xs text-warmgray">
+              Verified instantly with a "Verified" badge, using your real
+              follower count from{" "}
+              {platform === "youtube" ? "Google" : "Instagram"}. You won't be
+              able to edit that number yourself afterward.
+            </p>
+          </div>
 
-      <div className="flex items-center gap-3 text-xs text-warmgray">
-        <div className="h-px flex-1 bg-ink/10" />
-        or add manually
-        <div className="h-px flex-1 bg-ink/10" />
-      </div>
+          <div className="flex items-center gap-3 text-xs text-warmgray">
+            <div className="h-px flex-1 bg-ink/10" />
+            or add manually
+            <div className="h-px flex-1 bg-ink/10" />
+          </div>
+        </>
+      )}
 
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="platform" value={platform} />
@@ -100,11 +105,10 @@ export function AddPlatformForm({
 
         <AddButton />
       </form>
-                  <p className="text-xs text-warmgray">
-        Manually added profiles need admin approval before brands can see
-        them — you'll show as "Pending review" until then. Connect{" "}
-        {label} instead (or anytime afterward) to skip review entirely,
-        since that data is already confirmed.
+                        <p className="text-xs text-warmgray">
+        {oauthLive
+          ? `Manually added profiles need admin approval before brands can see them — you'll show as "Pending review" until then. Connect ${label} instead (or anytime afterward) to skip review entirely, since that data is already confirmed.`
+          : `Every new profile needs a quick admin approval before brands can see it — you'll show as "Pending review" until then, usually reviewed within a day.`}
       </p>
     </Card>
   );
