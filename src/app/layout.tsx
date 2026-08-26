@@ -38,11 +38,15 @@ const monoFont = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Juncture",
   description: "Connecting content creators with brands for paid promotions.",
-  // Registers the full favicon package (multiple sizes, Apple touch icon,
-  // Android/PWA icons via the manifest) the App-Router-idiomatic way --
-  // this is the metadata equivalent of the <link rel="icon" ...> tags a
-  // traditional HTML <head> would use, and Next.js renders the correct
-  // tags into <head> automatically from this.
+  openGraph: {
+    title: "Juncture",
+    description: "Connecting content creators with brands for paid promotions.",
+    url: "https://www.juncture.co.in",
+    siteName: "Juncture",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    locale: "en_IN",
+    type: "website",
+  },
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
