@@ -72,14 +72,13 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
         ) : (
           <Badge variant="neutral">Manual</Badge>
         )}
-        {profile.platform === "youtube" && profile.oauth_connected && (
-          <a
-            href="/auth/connect/google"
-            className="ml-auto text-xs font-medium text-teal hover:underline"
-          >
-            Refresh from YouTube
-          </a>
-        )}
+       {profile.oauth_connected && (<a
+    href={connectHref}
+    className="ml-auto text-xs font-medium text-teal hover:underline"
+  >
+    Refresh from {profile.platform === "youtube" ? "YouTube" : "Instagram"}
+  </a>
+)}
       </div>
 
       {/*
