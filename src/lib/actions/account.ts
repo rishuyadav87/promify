@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { createServiceRoleClient } from "@/lib/supabase/serviceRole";
 type ActionState = { error: string | null };
 
 export async function updateUsername(
@@ -28,7 +29,8 @@ export async function updateUsername(
     .toLowerCase();
   console.log("DEBUG raw form value:", formData.get("username"));
   if (!usernameRaw) {
-    const { error } = await supabase
+    const serviceRoleClient = createServiceRoleClient();
+    const { error } = await serviceRoleClient
       .from("users")
       .update({ username: null })
       .eq("id", user.id);
@@ -45,18 +47,11 @@ export async function updateUsername(
     };
   }
 
-  const { data: updateResult, error } = await supabase
+  const serviceRoleClient = createServiceRoleClient();
+  const { error } = await serviceRoleClient
     .from("users")
     .update({ username: usernameRaw })
-    .eq("id", user.id)
-    .select();
-
-  console.log(
-    "DEBUG update result:",
-    JSON.stringify(updateResult),
-    "error:",
-    JSON.stringify(error),
-  );
+    .eq("id", user.id);
 
   if (error) {
     if (error.code === "23505") {
