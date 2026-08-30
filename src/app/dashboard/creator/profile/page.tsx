@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { EditProfileForm } from "@/components/creators/EditProfileForm";
 import { AddPlatformForm } from "@/components/creators/AddPlatformForm";
 import { Card } from "@/components/ui/Card";
+import { UsernameForm } from "@/components/account/UsernameForm";
 import { redirect } from "next/navigation";
 
 export default async function CreatorProfilePage({
@@ -20,6 +21,12 @@ export default async function CreatorProfilePage({
   if (!user) {
     redirect("/login");
   }
+    const { data: userRow } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user.id)
+    .single();
+
   const { data: profiles } = await supabase
     .from("creators")
     .select(
@@ -43,7 +50,7 @@ const instagramProfile = (profiles ?? []).find(
           Update your public details for each connected platform.
         </p>
       </div>
-
+        <UsernameForm currentUsername={userRow?.username ?? null} />
       {searchParams.youtube_connect === "success" && (
         <Card className="border-teal/30 bg-teal/5">
           <p className="text-sm text-teal">{searchParams.message}</p>

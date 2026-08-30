@@ -1,0 +1,55 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+
+type ActionState = { error: string | null };
+
+export async function updateUsername(
+  prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated." };
+
+  const usernameRaw = (formData.get("username") as string)
+    ?.trim()
+    .toLowerCase();
+
+  if (!usernameRaw) {
+    const { error } = await supabase
+      .from("users")
+      .update({ username: null })
+      .eq("id", user.id);
+    if (error) return { error: error.message };
+    revalidatePath("/dashboard/creator/profile");
+    revalidatePath("/dashboard/brand/profile");
+    return { error: null };
+  }
+
+  if (!/^[a-z0-9_]{3,20}$/.test(usernameRaw)) {
+    return {
+      error:
+        "Username must be 3-20 characters: lowercase letters, numbers, and underscores only.",
+    };
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .update({ username: usernameRaw })
+    .eq("id", user.id);
+
+  if (error) {
+    if (error.code === "23505") {
+      return { error: "That username is already taken." };
+    }
+    return { error: error.message };
+  }
+
+  revalidatePath("/dashboard/creator/profile");
+  revalidatePath("/dashboard/brand/profile");
+  return { error: null };
+}
