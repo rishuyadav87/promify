@@ -45,10 +45,18 @@ export async function updateUsername(
     };
   }
 
-  const { error } = await supabase
+  const { data: updateResult, error } = await supabase
     .from("users")
     .update({ username: usernameRaw })
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .select();
+
+  console.log(
+    "DEBUG update result:",
+    JSON.stringify(updateResult),
+    "error:",
+    JSON.stringify(error),
+  );
 
   if (error) {
     if (error.code === "23505") {
@@ -56,7 +64,6 @@ export async function updateUsername(
     }
     return { error: error.message };
   }
-
   revalidatePath("/dashboard/creator/profile");
   revalidatePath("/dashboard/brand/profile");
   redirect(dashboardPath);
