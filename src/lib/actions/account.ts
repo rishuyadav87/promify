@@ -26,7 +26,7 @@ export async function updateUsername(
   const usernameRaw = (formData.get("username") as string)
     ?.trim()
     .toLowerCase();
-
+  console.log("DEBUG raw form value:", formData.get("username"));
   if (!usernameRaw) {
     const { error } = await supabase
       .from("users")
