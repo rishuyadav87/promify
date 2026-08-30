@@ -19,6 +19,11 @@ export default async function BrandDashboardPage({
   if (!user) {
     redirect("/login");
   }
+    const { data: userRow } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user.id)
+    .single();
   const { data: brand } = await supabase
     .from("brands")
     .select("company_name, created_at")
@@ -71,8 +76,10 @@ export default async function BrandDashboardPage({
       )}
       <Card className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold text-ink">
-            {brand?.company_name ?? "Your company"}
+                   <h2 className="text-xl font-semibold text-ink">
+            {userRow?.username
+              ? `@${userRow.username}`
+              : (brand?.company_name ?? "Your company")}
           </h2>
           <p className="text-sm text-warmgray">
             Member since{" "}

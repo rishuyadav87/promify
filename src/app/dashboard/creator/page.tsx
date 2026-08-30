@@ -13,11 +13,15 @@ export default async function CreatorDashboardPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+  
   if (!user) {
     redirect("/login");
   }
-
+const { data: userRow } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user.id)
+    .single();
   const { data: creatorRows } = await supabase
     .from("creators")
     .select("display_name, platform, handle, follower_count, tier, niche")
@@ -42,8 +46,10 @@ export default async function CreatorDashboardPage() {
       <Card className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-semibold text-ink">
-              {creator?.display_name ?? "Your profile"}
+                        <h2 className="text-xl font-semibold text-ink">
+              {userRow?.username
+                ? `@${userRow.username}`
+                : (creator?.display_name ?? "Your profile")}
             </h2>
             {creator?.tier && (
               <Badge variant={creator.tier === "tier1" ? "brick" : "teal"}>

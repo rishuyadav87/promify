@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
+import { redirect } from "next/navigation";
 type ActionState = { error: string | null };
 
 export async function updateUsername(
@@ -14,6 +14,14 @@ export async function updateUsername(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: "Not authenticated." };
+
+  const { data: userRow } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  const dashboardPath =
+    userRow?.role === "brand" ? "/dashboard/brand" : "/dashboard/creator";
 
   const usernameRaw = (formData.get("username") as string)
     ?.trim()
@@ -27,7 +35,7 @@ export async function updateUsername(
     if (error) return { error: error.message };
     revalidatePath("/dashboard/creator/profile");
     revalidatePath("/dashboard/brand/profile");
-    return { error: null };
+    redirect(dashboardPath);
   }
 
   if (!/^[a-z0-9_]{3,20}$/.test(usernameRaw)) {
@@ -51,5 +59,5 @@ export async function updateUsername(
 
   revalidatePath("/dashboard/creator/profile");
   revalidatePath("/dashboard/brand/profile");
-  return { error: null };
+  redirect(dashboardPath);
 }

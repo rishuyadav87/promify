@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
+import { redirect } from "next/navigation";
 type ActionState = { error: string | null };
 
 export async function updateBrandProfile(
@@ -25,7 +25,7 @@ export async function updateBrandProfile(
 
   if (error) return { error: error.message };
 
-  revalidatePath("/dashboard/brand/profile");
+   revalidatePath("/dashboard/brand/profile");
   revalidatePath("/dashboard/brand");
-  return { error: null };
+  redirect("/dashboard/brand");
 }

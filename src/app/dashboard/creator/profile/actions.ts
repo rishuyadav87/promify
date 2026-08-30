@@ -128,18 +128,11 @@ export async function addCreatorPlatform(
     tier: getEligibleTier(platform as "instagram" | "youtube", 0, false),
   });
 
-    if (error) return { error: error.message };
+   if (error) return { error: error.message };
 
-  // Manual entries are the only path that lands in the admin approval
-  // queue -- OAuth-verified platforms are auto-approved and skip this
-  // entirely, so this is the one place that needs to alert an admin.
   await notifyAdminOfPendingCreator({ displayName, platform, handle });
 
   revalidatePath("/dashboard/creator/profile");
   revalidatePath("/dashboard/creator");
-  return { error: null };
-
-  revalidatePath("/dashboard/creator/profile");
-  revalidatePath("/dashboard/creator");
-  return { error: null };
+  redirect("/dashboard/creator");
 }
