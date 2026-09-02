@@ -7,7 +7,7 @@ import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { updateCreatorProfile } from "@/app/dashboard/creator/profile/actions";
-import { getPriceBand } from "@/lib/pricing";
+import { getPriceBand, FOLLOWER_COUNT_MAX } from "@/lib/pricing";
 import { OAUTH_LIVE } from "@/lib/oauthAvailability";
 type Profile = {
   id: string;
@@ -228,6 +228,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
             name="follower_count"
             type="number"
             min={0}
+            max={FOLLOWER_COUNT_MAX}
             defaultValue={profile.follower_count}
             disabled={profile.oauth_connected}
             required={!profile.oauth_connected}

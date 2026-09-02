@@ -9,6 +9,16 @@ const ELIGIBILITY_FLOOR = 1_000;
 const TIER1_THRESHOLD = 10_000;
 const YOUTUBE_MONETIZED_MULTIPLIER = 1.2;
 
+// Sanity ceiling for self-reported follower counts, not a business rule --
+// the largest real accounts on either platform sit well under 1B, so this
+// exists purely to catch typos (an extra zero or two) and bad-faith entries
+// rather than to model a realistic maximum. Shared between the client input
+// (src/components/creators/EditProfileForm.tsx), the server action
+// (src/app/dashboard/creator/profile/actions.ts), and the DB check
+// constraint (supabase/migrations/0022_...) so the three layers can't drift
+// out of sync with each other.
+export const FOLLOWER_COUNT_MAX = 1_000_000_000;
+
 export function getEligibleTier(
   platform: Platform,
   followerCount: number,

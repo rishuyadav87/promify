@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/types/database.types";
-import { getEligibleTier } from "@/lib/pricing";
+import { getEligibleTier, FOLLOWER_COUNT_MAX } from "@/lib/pricing";
 import { notifyAdminOfPendingCreator } from "@/lib/notifications";
 type ActionState = { error: string | null };
 
@@ -71,6 +71,11 @@ export async function updateCreatorProfile(
     if (!handle) return { error: "Handle can't be empty." };
     if (!Number.isFinite(followerCount) || followerCount < 0) {
       return { error: "Follower count must be a positive number." };
+    }
+    if (followerCount > FOLLOWER_COUNT_MAX) {
+      return {
+        error: `Follower count seems too high — max is ${FOLLOWER_COUNT_MAX.toLocaleString("en-IN")}.`,
+      };
     }
     update.handle = handle;
     update.follower_count = Math.round(followerCount);

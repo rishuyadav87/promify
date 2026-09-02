@@ -5,6 +5,7 @@ import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 export default function LoginPage() {
@@ -22,11 +23,20 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Separate from `error` -- this case needs a different UI (a resend
+  // link, not just red text), so it's tracked as its own piece of state
+  // rather than trying to detect it by string-matching error.message.
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState(false);
+  const [resendState, setResendState] = useState<
+    "idle" | "sending" | "sent"
+  >("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setUnconfirmedEmail(false);
+    setResendState("idle");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -34,7 +44,15 @@ function LoginForm() {
     });
 
     if (error) {
-      setError(error.message);
+      // error.code is the stable identifier Supabase documents for this
+      // case ('email_not_confirmed') -- error.message is human-readable
+      // text meant for display, not for branching logic on, since its
+      // exact wording isn't guaranteed to stay the same across versions.
+      if (error.code === "email_not_confirmed") {
+        setUnconfirmedEmail(true);
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
       return;
     }
@@ -52,6 +70,21 @@ function LoginForm() {
     // entirely.
     window.location.href = "/dashboard";
   }
+  async function handleResendConfirmation() {
+    setResendState("sending");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback/oauth-signin`,
+      },
+    });
+    // Resend errors (rate limit, invalid email) aren't worth a separate
+    // error state here -- falling back to "idle" just lets the person
+    // press the button again, which is the same recovery either way.
+    setResendState(error ? "idle" : "sent");
+  }
+
   async function handleGoogleSignIn() {
     setError(null);
     await supabase.auth.signInWithOAuth({
@@ -125,18 +158,41 @@ function LoginForm() {
                 Forgot password?
               </a>
             </div>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               autoComplete="current-password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
           {error && <p className="text-sm text-error">{error}</p>}
+
+          {unconfirmedEmail && (
+            <div className="rounded-md bg-brick-subtle p-3 text-sm text-ink">
+              <p>
+                That email hasn&apos;t been confirmed yet. Check your inbox
+                for the confirmation link, or:
+              </p>
+              {resendState === "sent" ? (
+                <p className="mt-1 font-medium text-teal">
+                  Confirmation email sent — check your inbox.
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resendState === "sending"}
+                  className="mt-1 font-medium text-teal hover:underline disabled:opacity-50"
+                >
+                  {resendState === "sending"
+                    ? "Sending…"
+                    : "Resend confirmation email"}
+                </button>
+              )}
+            </div>
+          )}
 
           <Button
             type="submit"

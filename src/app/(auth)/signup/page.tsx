@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 type Role = "creator" | "brand";
 
@@ -36,6 +37,9 @@ function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [resendState, setResendState] = useState<
+    "idle" | "sending" | "sent"
+  >("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +65,18 @@ function SignupForm() {
     setLoading(false);
   }
 
+  async function handleResendConfirmation() {
+    setResendState("sending");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback/oauth-signin`,
+      },
+    });
+    setResendState(error ? "idle" : "sent");
+  }
+
   async function handleGoogleSignIn() {
     setError(null);
     await supabase.auth.signInWithOAuth({
@@ -84,6 +100,22 @@ function SignupForm() {
           <p className="text-sm text-warmgray">
             We sent a confirmation link to {email}.
           </p>
+          {resendState === "sent" ? (
+            <p className="text-sm font-medium text-teal">
+              Sent again — check your inbox.
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={handleResendConfirmation}
+              disabled={resendState === "sending"}
+              className="text-sm font-medium text-teal hover:underline disabled:opacity-50"
+            >
+              {resendState === "sending"
+                ? "Sending…"
+                : "Didn't get it? Resend"}
+            </button>
+          )}
         </Card>
       </main>
     );
@@ -155,16 +187,14 @@ function SignupForm() {
             <label htmlFor="password" className="text-sm font-medium text-ink">
               Password
             </label>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               autoComplete="new-password"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
 

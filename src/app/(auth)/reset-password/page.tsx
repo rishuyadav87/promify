@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 export default function ResetPasswordPage() {
   return (
@@ -115,16 +116,14 @@ function ResetPasswordForm() {
             >
               New password
             </label>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               autoComplete="new-password"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
 
@@ -135,16 +134,14 @@ function ResetPasswordForm() {
             >
               Confirm new password
             </label>
-            <input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              type="password"
               autoComplete="new-password"
               required
               minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
 
