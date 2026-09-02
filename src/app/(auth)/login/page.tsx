@@ -5,8 +5,19 @@ import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const supabase = createClient();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -57,9 +68,15 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 py-16 sm:px-6">
       <Card className="flex flex-col gap-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">
+               <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Log in
         </h1>
+
+        {searchParams.get("reset") === "success" && (
+          <p className="rounded-md bg-teal-subtle p-3 text-sm text-teal">
+            Password updated — log in with your new password.
+          </p>
+        )}
 
         <Button
           type="button"
@@ -94,10 +111,21 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="password" className="text-sm font-medium text-ink">
-              Password
-            </label>
+                    <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-ink"
+              >
+                Password
+              </label>
+              
+                href="/forgot-password"
+                className="text-xs font-medium text-teal hover:underline"
+             <a>
+                Forgot password?
+              </a>
+            </div>
             <input
               id="password"
               name="password"
