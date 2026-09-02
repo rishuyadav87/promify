@@ -86,10 +86,10 @@ export default function ForgotPasswordPage() {
         </form>
       </Card>
       <p className="mt-4 text-center text-sm text-warmgray">
-        
+        <a
           href="/login"
           className="font-medium text-ink underline underline-offset-2"
-        <a>
+        >
           Back to log in
         </a>
       </p>
