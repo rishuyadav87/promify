@@ -110,8 +110,7 @@ function LoginForm() {
               className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
-
-                    <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
@@ -119,10 +118,10 @@ function LoginForm() {
               >
                 Password
               </label>
-              
+              <a
                 href="/forgot-password"
                 className="text-xs font-medium text-teal hover:underline"
-             <a>
+              >
                 Forgot password?
               </a>
             </div>
@@ -137,7 +136,6 @@ function LoginForm() {
               className="rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
             />
           </div>
-
           {error && <p className="text-sm text-error">{error}</p>}
 
           <Button
