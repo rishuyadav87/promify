@@ -1,14 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const linkError = searchParams.get("error_description");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -63,8 +73,28 @@ export default function ResetPasswordPage() {
   if (!ready) {
     return (
       <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 py-16 sm:px-6">
-        <Card className="flex flex-col items-center gap-2 text-center">
-          <p className="text-sm text-warmgray">Verifying your reset link…</p>
+        <Card className="flex flex-col items-center gap-3 text-center">
+          {linkError ? (
+            <>
+              <h1 className="text-lg font-semibold text-ink">
+                This link has expired
+              </h1>
+              <p className="text-sm text-warmgray">
+                Password reset links only work for a short time. Request a
+                new one below.
+              </p>
+              <a
+                href="/forgot-password"
+                className="text-sm font-medium text-teal hover:underline"
+              >
+                Send a new reset link
+              </a>
+            </>
+          ) : (
+            <p className="text-sm text-warmgray">
+              Verifying your reset link…
+            </p>
+          )}
         </Card>
       </main>
     );
