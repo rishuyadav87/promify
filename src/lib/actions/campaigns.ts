@@ -198,6 +198,25 @@ export async function submitContent(
     };
   }
 
+  // Same reasoning as the price/status triggers (0009, 0012): the UI
+  // already hides the submit form until payment is confirmed
+  // (ContentSubmissionPanel), but that alone doesn't stop a direct call
+  // to this action. Payment is checked here too, using the same
+  // session-scoped client -- RLS already lets a campaign participant
+  // read their own payments row, so no service-role client is needed
+  // just to check.
+  const { data: paidPayment } = await supabase
+    .from("payments")
+    .select("id")
+    .eq("campaign_id", campaignId)
+    .eq("status", "paid")
+    .maybeSingle();
+  if (!paidPayment) {
+    return {
+      error: "Content can only be submitted after the brand has paid.",
+    };
+  }
+
   // Flat 48-hour window for now — no content_type stored yet to vary this by.
   const measurementWindowEndsAt = new Date(
     Date.now() + 48 * 60 * 60 * 1000,

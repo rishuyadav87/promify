@@ -43,6 +43,15 @@ export default async function CreatorCampaignDetailPage({
     .limit(1)
     .maybeSingle();
 
+  const { data: payment } = await supabase
+    .from("payments")
+    .select("status")
+    .eq("campaign_id", params.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const isPaid = payment?.status === "paid";
+
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -81,6 +90,7 @@ export default async function CreatorCampaignDetailPage({
         postUrl={campaign.post_url}
         measurementWindowEndsAt={campaign.measurement_window_ends_at}
         price={campaign.price}
+        isPaid={isPaid}
         viewerParty="creator"
       />
       <CampaignResolutionPanel

@@ -70,6 +70,35 @@ export async function bookCreator(
   if (error) return { error: error.message };
 
   if (newCampaign?.id) {
+    // acceptOffer (src/lib/actions/campaigns.ts) only ever looks at
+    // campaign_offers for something to accept -- it never falls back to
+    // campaigns.price directly. Without a row here, the very first
+    // booking has nothing in campaign_offers yet, so the creator's
+    // "Accept this price" button fails with "No offer to accept yet."
+    // every single time, even though a price clearly is set. This
+    // records the brand's opening price as offer #1, the same way any
+    // later counter-offer gets recorded by counterOffer -- so the
+    // opening price is just the first entry in the same history, not a
+    // special case the acceptance logic has to know about separately.
+    const { error: offerError } = await supabase
+      .from("campaign_offers")
+      .insert({
+        campaign_id: newCampaign.id,
+        offered_by: "brand",
+        amount: Math.round(price),
+      });
+    if (offerError) {
+      // Don't fail the whole booking over this -- the campaign itself
+      // was created successfully. Logged so it's visible in Vercel's
+      // function logs if it ever happens, since a silent failure here
+      // would quietly reintroduce the exact bug this is fixing.
+      console.error(
+        "Failed to record opening offer for campaign",
+        newCampaign.id,
+        offerError,
+      );
+    }
+
     await notifyNewBooking({
       creatorId,
       brandId: brand.id,

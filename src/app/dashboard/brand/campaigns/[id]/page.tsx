@@ -5,6 +5,7 @@ import { NegotiationPanel } from "@/components/campaigns/NegotiationPanel";
 import { ContentSubmissionPanel } from "@/components/campaigns/ContentSubmissionPanel";
 import { CampaignResolutionPanel } from "@/components/campaigns/CampaignResolutionPanel";
 import { DisputeNotice } from "@/components/campaigns/DisputeNotice";
+import { PaymentPanel } from "@/components/campaigns/PaymentPanel";
 import { PlatformIcon } from "@/components/icons/PlatformIcon";
 import { autoCompleteExpiredCampaign } from "@/lib/campaignLifecycle";
 export default async function BrandCampaignDetailPage({
@@ -43,6 +44,19 @@ export default async function BrandCampaignDetailPage({
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  // Latest payment row for this campaign, if any -- 'paid' is what
+  // unlocks content submission below. RLS (payments_select_participant_or_admin,
+  // 0015) already limits this select to the campaign's own brand/creator,
+  // so no extra ownership check is needed here.
+  const { data: payment } = await supabase
+    .from("payments")
+    .select("status")
+    .eq("campaign_id", params.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const isPaid = payment?.status === "paid";
 
   return (
     <div className="flex flex-col gap-8">
@@ -86,12 +100,20 @@ export default async function BrandCampaignDetailPage({
         currentAmount={currentAmount}
         viewerParty="brand"
       />
+      {campaign.status === "accepted" && !isPaid && (
+        <PaymentPanel
+          campaignId={campaign.id}
+          price={campaign.price}
+          creatorName={campaign.creators?.display_name ?? "the creator"}
+        />
+      )}
       <ContentSubmissionPanel
         campaignId={campaign.id}
         status={campaign.status}
         postUrl={campaign.post_url}
         measurementWindowEndsAt={campaign.measurement_window_ends_at}
         price={campaign.price}
+        isPaid={isPaid}
         viewerParty="brand"
       />
       <CampaignResolutionPanel

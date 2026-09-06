@@ -29,6 +29,7 @@ export function ContentSubmissionPanel({
   postUrl,
   measurementWindowEndsAt,
   price,
+  isPaid,
   viewerParty,
 }: {
   campaignId: string;
@@ -36,6 +37,7 @@ export function ContentSubmissionPanel({
   postUrl: string | null;
   measurementWindowEndsAt: string | null;
   price: number;
+  isPaid: boolean;
   viewerParty: "creator" | "brand";
 }) {
   const [state, formAction] = useFormState(submitContent, { error: null });
@@ -164,6 +166,19 @@ export function ContentSubmissionPanel({
   }
 
   if (status === "accepted" && viewerParty === "creator") {
+    if (!isPaid) {
+      return (
+        <Card>
+          <h2 className="text-base font-semibold text-ink">
+            Waiting for payment
+          </h2>
+          <p className="mt-1 text-sm text-warmgray">
+            The brand needs to complete payment before you can submit your
+            content.
+          </p>
+        </Card>
+      );
+    }
     return (
       <Card className="flex flex-col gap-4">
         <div>
@@ -203,6 +218,10 @@ export function ContentSubmissionPanel({
   }
 
   if (status === "accepted" && viewerParty === "brand") {
+    // Not paid yet: the brand's page shows PaymentPanel for this instead
+    // (src/components/campaigns/PaymentPanel.tsx) -- rendering a second
+    // message here would just be confusing next to that.
+    if (!isPaid) return null;
     return (
       <Card>
         <p className="text-sm text-warmgray">
