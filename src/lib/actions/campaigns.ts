@@ -8,6 +8,7 @@ import {
   notifyDisputeRaised,
   notifyIfDisputeResolved,
 } from "@/lib/notifications";
+import { ensurePayoutRecord } from "@/lib/payouts";
 type ActionState = { error: string | null };
 
 async function resolveParty(campaignId: string) {
@@ -260,18 +261,18 @@ export async function confirmSatisfaction(
     return { error: "This campaign isn't in a state that can be confirmed." };
   }
 
-  // This is the brand explicitly saying "I'm happy, release payout now"
-  // instead of waiting for the 48-hour measurement window to expire and
-  // auto-complete it (see campaignLifecycle.ts). Real payout release
-  // itself isn't wired up yet -- that depends on Razorpay actually being
-  // integrated -- so for now this only moves the campaign to 'completed'.
-  // Once Razorpay/payouts are live, this is the natural place to also
-  // insert the real payouts row for this campaign.
+  // Once Razorpay Route is available (see 0023 migration + chat decision
+  // on RBI turnover thresholds), this is the natural place to also
+  // trigger a real, automatic payout. Until then, this creates the
+  // 'pending' record an admin actions manually from
+  // /dashboard/admin/payouts.
    const { error } = await supabase
     .from("campaigns")
     .update({ status: "completed" })
     .eq("id", campaignId);
   if (error) return { error: error.message };
+
+  await ensurePayoutRecord(campaignId, campaign.price);
 
   await notifyIfDisputeResolved({
     campaignId,

@@ -29,6 +29,7 @@ export default async function AdminDashboardPage() {
     { count: activeCampaigns },
     { count: totalCreators },
     { count: totalBrands },
+    { count: pendingPayouts },
   ] = await Promise.all([
     supabase
       .from("campaigns")
@@ -51,6 +52,10 @@ export default async function AdminDashboardPage() {
       .in("status", ["accepted", "content_submitted", "live", "measuring"]),
     supabase.from("creators").select("id", { count: "exact", head: true }),
     supabase.from("brands").select("id", { count: "exact", head: true }),
+    supabase
+      .from("payouts")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending"),
   ]);
 
   const stats = [
@@ -78,6 +83,11 @@ export default async function AdminDashboardPage() {
       label: "Total brands",
       value: totalBrands ?? 0,
       href: "/dashboard/admin/brands",
+    },
+    {
+      label: "Pending payouts",
+      value: pendingPayouts ?? 0,
+      href: "/dashboard/admin/payouts",
     },
   ];
   return (

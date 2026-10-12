@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ensurePayoutRecord } from "@/lib/payouts";
 
 const COMPLETABLE_STATUSES = [
   "content_submitted",
@@ -18,10 +19,9 @@ type CampaignLike = {
  * 'completed' and returns the (possibly updated) status to render with —
  * no second fetch needed.
  */
-export async function autoCompleteExpiredCampaign<T extends CampaignLike>(
-  supabase: ReturnType<typeof createClient>,
-  campaign: T,
-): Promise<string> {
+export async function autoCompleteExpiredCampaign<
+  T extends CampaignLike & { price: number },
+>(supabase: ReturnType<typeof createClient>, campaign: T): Promise<string> {
   if (
     !(COMPLETABLE_STATUSES as readonly string[]).includes(campaign.status) ||
     !campaign.measurement_window_ends_at
@@ -38,7 +38,9 @@ export async function autoCompleteExpiredCampaign<T extends CampaignLike>(
     .eq("id", campaign.id)
     .in("status", COMPLETABLE_STATUSES);
 
-  return error ? campaign.status : "completed";
+  if (error) return campaign.status;
+  await ensurePayoutRecord(campaign.id, campaign.price);
+  return "completed";
 }
 
 /**
@@ -46,10 +48,9 @@ export async function autoCompleteExpiredCampaign<T extends CampaignLike>(
  * given rows in one query, returns the rows with status patched locally
  * so the list reflects it without a second fetch.
  */
-export async function autoCompleteExpiredCampaigns<T extends CampaignLike>(
-  supabase: ReturnType<typeof createClient>,
-  campaigns: T[],
-): Promise<T[]> {
+export async function autoCompleteExpiredCampaigns<
+  T extends CampaignLike & { price: number },
+>(supabase: ReturnType<typeof createClient>, campaigns: T[]): Promise<T[]> {
   const nowIso = new Date().toISOString();
   const expiredIds = campaigns
     .filter(
@@ -67,6 +68,12 @@ export async function autoCompleteExpiredCampaigns<T extends CampaignLike>(
     .update({ status: "completed" })
     .in("id", expiredIds)
     .in("status", COMPLETABLE_STATUSES);
+
+  await Promise.all(
+    campaigns
+      .filter((c) => expiredIds.includes(c.id))
+      .map((c) => ensurePayoutRecord(c.id, c.price)),
+  );
 
   return campaigns.map((c) =>
     expiredIds.includes(c.id) ? { ...c, status: "completed" } : c,

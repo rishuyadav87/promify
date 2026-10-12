@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { EditProfileForm } from "@/components/creators/EditProfileForm";
 import { AddPlatformForm } from "@/components/creators/AddPlatformForm";
+import { PayoutDetailsForm } from "@/components/creators/PayoutDetailsForm";
 import { Card } from "@/components/ui/Card";
 import { UsernameForm } from "@/components/account/UsernameForm";
 import { redirect } from "next/navigation";
@@ -35,6 +36,12 @@ export default async function CreatorProfilePage({
     .eq("user_id", user.id)
     .order("platform");
 
+  const { data: payoutDetails } = await supabase
+    .from("creator_payout_details")
+    .select("upi_vpa")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
   const connectedPlatforms = (profiles ?? []).map((p) => p.platform);
 const youtubeProfile = (profiles ?? []).find((p) => p.platform === "youtube");
 const instagramProfile = (profiles ?? []).find(
@@ -51,6 +58,7 @@ const instagramProfile = (profiles ?? []).find(
         </p>
       </div>
         <UsernameForm currentUsername={userRow?.username ?? null} />
+        <PayoutDetailsForm currentUpiVpa={payoutDetails?.upi_vpa ?? null} />
       {searchParams.youtube_connect === "success" && (
         <Card className="border-teal/30 bg-teal/5">
           <p className="text-sm text-teal">{searchParams.message}</p>
