@@ -15,9 +15,9 @@
  */
 :root {
   /* ── Core text & backgrounds ──────────────────────────────────── */
-  --color-ink:      240 237 232;   /* #F0EDE8 — near-white warm text       */
+  --color-ink:      248 249 250;   /* #F8F9FA — crisp bright text          */
   --color-stone:     14  12  11;   /* #0E0C0B — page bg: warm near-black   */
-  --color-warmgray: 160 153 143;   /* #A0998F — secondary text             */
+  --color-warmgray: 203 213 225;   /* #CBD5E1 — bright slate-300 for readable secondary text */
   --color-surface:   28  25  22;   /* #1C1916 — card / elevated bg         */
   --color-surface2:  38  34  29;   /* #26221D — slightly lighter surface   */
 

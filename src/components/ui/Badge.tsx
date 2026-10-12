@@ -2,21 +2,19 @@ import type { ReactNode } from "react";
 
 type Variant = "brick" | "teal" | "neutral" | "gold" | "success" | "error";
 
-// brick = tier1, teal = tier2, gold = premium/price — keeps the same
-// two-sided color logic used everywhere else while adding richer styling
 const variants: Record<Variant, string> = {
   brick:
-    "bg-brick-subtle/80 text-brick border border-brick/20 shadow-[0_0_8px_rgba(220,85,45,0.15)]",
+    "bg-[#34160C] text-[#FF8566] border border-[#DC552D]/40 shadow-[0_0_10px_rgba(220,85,45,0.2)]",
   teal:
-    "bg-teal-subtle/80 text-teal border border-teal/20 shadow-[0_0_8px_rgba(56,185,172,0.15)]",
+    "bg-[#0A2A27] text-[#4EE5D5] border border-[#38B9AC]/40 shadow-[0_0_10px_rgba(56,185,172,0.2)]",
   neutral:
-    "bg-ink/8 text-warmgray border border-ink/10",
+    "bg-white/10 text-slate-200 border border-white/15",
   gold:
-    "text-gradient-gold border border-yellow-500/25 bg-yellow-900/20 shadow-[0_0_8px_rgba(201,151,58,0.2)]",
+    "text-[#FFD166] border border-yellow-500/40 bg-yellow-950/40 shadow-[0_0_10px_rgba(201,151,58,0.25)]",
   success:
-    "bg-success/15 text-success border border-success/25",
+    "bg-emerald-950/40 text-emerald-400 border border-emerald-500/40",
   error:
-    "bg-error/15 text-error border border-error/25",
+    "bg-rose-950/40 text-rose-400 border border-rose-500/40",
 };
 
 export function Badge({

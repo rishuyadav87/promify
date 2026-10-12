@@ -8,21 +8,21 @@ import type {
 type Variant = "primary" | "secondary" | "outline" | "ghost";
 
 const base =
-  "inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal focus-visible:ring-offset-stone disabled:pointer-events-none disabled:opacity-40 relative overflow-hidden";
+  "inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal focus-visible:ring-offset-stone disabled:pointer-events-none disabled:opacity-40 relative overflow-hidden";
 
 const variants: Record<Variant, string> = {
-  // Gradient fill with glow on hover
+  // High contrast white text with gradient and glow
   primary:
-    "bg-gradient-teal text-stone shadow-glow-sm hover:shadow-glow-teal hover:scale-[1.02] active:scale-[0.99] active:opacity-90",
-  // Brick gradient
+    "bg-gradient-teal text-white shadow-glow-sm hover:shadow-glow-teal hover:scale-[1.02] active:scale-[0.99]",
+  // Brick gradient with crisp white text
   secondary:
-    "bg-gradient-brick text-stone shadow-[0_0_8px_rgba(220,85,45,0.25)] hover:shadow-glow-brick hover:scale-[1.02] active:scale-[0.99] active:opacity-90",
-  // Glass outline
+    "bg-gradient-brick text-white shadow-[0_0_12px_rgba(220,85,45,0.35)] hover:shadow-glow-brick hover:scale-[1.02] active:scale-[0.99]",
+  // Glass outline with crisp white text
   outline:
-    "border border-ink/20 text-ink bg-transparent hover:bg-ink/8 hover:border-ink/35 active:bg-ink/12 backdrop-blur-sm",
-  // Completely transparent
+    "border border-white/20 text-white bg-white/5 hover:bg-white/10 hover:border-white/35 active:bg-white/15 backdrop-blur-sm",
+  // Ghost variant
   ghost:
-    "text-warmgray hover:text-ink hover:bg-ink/6 active:bg-ink/10",
+    "text-slate-300 hover:text-white hover:bg-white/10 active:bg-white/15",
 };
 
 type CommonProps = {
