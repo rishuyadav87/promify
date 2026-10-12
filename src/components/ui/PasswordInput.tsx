@@ -6,9 +6,9 @@ import { Eye, EyeOff } from "lucide-react";
 
 // Same base classes as the plain <input> fields on the auth pages (see
 // login/signup/reset-password), plus right padding so typed text never
-// runs under the toggle button.
+// runs under the toggle button. Updated to premium rounded-xl style.
 const inputClasses =
-  "w-full rounded-md border border-ink/20 bg-surface px-3 py-2 pr-10 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
+  "w-full rounded-xl border border-ink/15 bg-surface/60 px-3.5 py-2.5 pr-10 text-sm text-ink placeholder:text-warmgray focus:border-teal/60 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-colors";
 
 // Drop-in replacement for `<input type="password" ... />` -- accepts the
 // same props (id, name, value, onChange, autoComplete, required,
@@ -35,7 +35,7 @@ export function PasswordInput({
         // it's a convenience click target, not a field to tab through.
         tabIndex={-1}
         aria-label={visible ? "Hide password" : "Show password"}
-        className="absolute inset-y-0 right-0 flex items-center px-3 text-warmgray hover:text-ink"
+        className="absolute inset-y-0 right-0 flex items-center px-3 text-warmgray transition-colors hover:text-ink"
       >
         {visible ? (
           <EyeOff className="h-4 w-4" />

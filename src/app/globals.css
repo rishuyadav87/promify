@@ -3,33 +3,72 @@
 @tailwind utilities;
 
 /*
- * "Two Sides" palette — light values are the original brand colors.
- * Dark values keep the same warm, editorial character (not a generic
- * near-black + neon-accent dark theme): the page background is a warm
- * charcoal rather than pure black, and ink/stone swap roles so text and
- * background literally invert. Brick and teal are brightened just enough
- * to stay legible and keep their punch against a dark surface — the
- * original teal in particular is too dark to read on its own dark
- * background otherwise.
- * Values are R G B triplets (no commas) so Tailwind's `<alpha-value>`
- * opacity modifiers, e.g. bg-teal/5, keep working in both modes.
+ * "Juncture Premium" palette — dark-first design system.
+ *
+ * Philosophy: deep warm charcoal base, not pure black. Surfaces lift
+ * via glass/blur rather than flat colour steps. Teal stays the primary
+ * action colour; brick anchors the creator side. Both are brighter and
+ * more saturated than before so gradients read properly on dark.
+ *
+ * Values are R G B triplets (no commas) so Tailwind's <alpha-value>
+ * opacity modifiers keep working in both modes.
  */
 :root {
-  --color-ink: 32 29 26; /* #201D1A — text on light */
-  --color-stone: 237 231 221; /* #EDE7DD — page background on light, pulled cooler/grayer than the original to step away from the warm-cream-background look common in AI-generated design */
-  --color-warmgray: 138 132 120; /* #8A8478 */
-  --color-surface: 255 255 255; /* card / input background on light */
+  /* ── Core text & backgrounds ──────────────────────────────────── */
+  --color-ink:      240 237 232;   /* #F0EDE8 — near-white warm text       */
+  --color-stone:     14  12  11;   /* #0E0C0B — page bg: warm near-black   */
+  --color-warmgray: 160 153 143;   /* #A0998F — secondary text             */
+  --color-surface:   28  25  22;   /* #1C1916 — card / elevated bg         */
+  --color-surface2:  38  34  29;   /* #26221D — slightly lighter surface   */
 
-  --color-brick: 168 57 31; /* #A8391F — deepened into a true fired-clay brick red, moved off the dusty terracotta-accent look that reads as a template default */
-  --color-brick-hover: 143 47 26; /* #8F2F1A */
-  --color-brick-subtle: 240 222 213; /* #F0DED5 */
+  /* ── Brand accents ────────────────────────────────────────────── */
+  --color-brick:        220  85  45;  /* #DC552D — vibrant fired-clay       */
+  --color-brick-hover:  240 100  55;  /* #F06437                            */
+  --color-brick-subtle:  52  22  12;  /* #34160C — dark tinted surface      */
 
-  --color-teal: 27 74 71; /* #1B4A47 */
-  --color-teal-hover: 20 55 53; /* #143735 */
-  --color-teal-subtle: 220 232 231; /* #DCE8E7 */
+  --color-teal:         56 185 172;  /* #38B9AC — bright jewel teal        */
+  --color-teal-hover:   80 210 196;  /* #50D2C4                            */
+  --color-teal-subtle:  10  42  39;  /* #0A2A27 — deep teal surface        */
 
-  --color-success: 61 122 84; /* #3D7A54 */
-  --color-error: 176 70 58; /* #B0463A */
+  /* ── Semantic ──────────────────────────────────────────────────── */
+  --color-success:  88 195 130;   /* #58C382 */
+  --color-error:   220  95  80;   /* #DC5F50 */
+
+  /* ── Gradient stops (used in CSS & via bg-[] utilities) ──────── */
+  --grad-teal-from:  #1a9e94;
+  --grad-teal-to:    #38B9AC;
+  --grad-brick-from: #b8360e;
+  --grad-brick-to:   #DC552D;
+  --grad-gold-from:  #c9973a;
+  --grad-gold-to:    #e8c56a;
+
+  --background: #0e0c0b;
+  --foreground: #f0ede8;
+
+  color-scheme: dark;
+}
+
+/*
+ * Light mode still works — kept minimal so it's usable if the user
+ * has forced light mode, but the designed experience is dark.
+ */
+.light {
+  --color-ink:      32  29  26;
+  --color-stone:   237 231 221;
+  --color-warmgray: 138 132 120;
+  --color-surface:  255 255 255;
+  --color-surface2: 245 242 238;
+
+  --color-brick:       168  57  31;
+  --color-brick-hover: 143  47  26;
+  --color-brick-subtle: 240 222 213;
+
+  --color-teal:        27  74  71;
+  --color-teal-hover:  20  55  53;
+  --color-teal-subtle: 220 232 231;
+
+  --color-success:  61 122  84;
+  --color-error:   176  70  58;
 
   --background: #ede7dd;
   --foreground: #201d1a;
@@ -37,29 +76,7 @@
   color-scheme: light;
 }
 
-.dark {
-  --color-ink: 240 236 229; /* text on dark — was stone */
-  --color-stone: 26 23 20; /* #1A1714 — page background on dark */
-  --color-warmgray: 163 156 142; /* lightened for legibility on dark */
-  --color-surface: 38 34 30; /* #26221E — cards lift slightly off the page bg */
-
-  --color-brick: 217 103 63; /* #D9673F — brightened from the new light-mode brick, keeps the same true-clay character rather than drifting toward orange */
-  --color-brick-hover: 193 89 53; /* #C15935 */
-  --color-brick-subtle: 56 34 27; /* #38221B — dark-tinted surface, not a light tint */
-
-  --color-teal: 79 166 158; /* #4FA69E — brightened, original is unreadable on dark */
-  --color-teal-hover: 109 187 179; /* #6DBBB3 */
-  --color-teal-subtle: 22 48 46; /* #16302E */
-
-  --color-success: 95 168 118; /* #5FA876 */
-  --color-error: 217 123 108; /* #D97B6C */
-
-  --background: #1a1714;
-  --foreground: #f0ece5;
-
-  color-scheme: dark;
-}
-
+/* ── Base styles ──────────────────────────────────────────────────── */
 body {
   color: var(--foreground);
   background: var(--background);
@@ -68,17 +85,153 @@ body {
     color 150ms ease;
 }
 
-/*
- * Applies the display face to every heading across the whole app in one
- * place, rather than adding a font-display class to headings in dozens
- * of individual page/component files. Body text and everything else
- * keeps the font-sans set on <body> in layout.tsx.
- */
-h1,
-h2,
-h3,
-h4 {
+/* Headings use the display face globally */
+h1, h2, h3, h4 {
   font-family: var(--font-display), Georgia, serif;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
+
+/* ── Premium gradient utilities ───────────────────────────────────── */
+@layer utilities {
+
+  /* Gradient text */
+  .text-gradient-teal {
+    background: linear-gradient(135deg, var(--grad-teal-from), var(--grad-teal-to));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-brick {
+    background: linear-gradient(135deg, var(--grad-brick-from), var(--grad-brick-to));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, var(--grad-gold-from), var(--grad-gold-to));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Background gradients */
+  .bg-gradient-teal {
+    background: linear-gradient(135deg, #0a2a27 0%, #0f3d38 50%, #1a5c55 100%);
+  }
+
+  .bg-gradient-brick {
+    background: linear-gradient(135deg, #2a1008 0%, #3d1a0a 50%, #5c2510 100%);
+  }
+
+  .bg-gradient-premium {
+    background: linear-gradient(135deg, #0e0c0b 0%, #141210 40%, #0f1a18 100%);
+  }
+
+  /* Glassmorphism card */
+  .glass-card {
+    background: rgba(28, 25, 22, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(240, 237, 232, 0.08);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(240, 237, 232, 0.06);
+  }
+
+  .glass-card-teal {
+    background: rgba(10, 42, 39, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(56, 185, 172, 0.2);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(56, 185, 172, 0.05),
+      inset 0 1px 0 rgba(56, 185, 172, 0.1);
+  }
+
+  .glass-card-brick {
+    background: rgba(42, 16, 8, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 85, 45, 0.2);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(220, 85, 45, 0.05),
+      inset 0 1px 0 rgba(220, 85, 45, 0.1);
+  }
+
+  /* Glow effects */
+  .glow-teal {
+    box-shadow: 0 0 20px rgba(56, 185, 172, 0.3), 0 0 60px rgba(56, 185, 172, 0.1);
+  }
+
+  .glow-brick {
+    box-shadow: 0 0 20px rgba(220, 85, 45, 0.3), 0 0 60px rgba(220, 85, 45, 0.1);
+  }
+
+  /* Ambient background orbs (decorative blobs) */
+  .orb-teal {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(56, 185, 172, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(40px);
+  }
+
+  .orb-brick {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(220, 85, 45, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(40px);
+  }
+
+  /* Gradient borders via pseudo-element approach */
+  .border-gradient-teal {
+    position: relative;
+    background: clip-padding;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Premium divider */
+  .divider-gradient {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56, 185, 172, 0.3), transparent);
+  }
+
+  /* Subtle grain texture for hero sections */
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+/* ── Premium button glow animations ──────────────────────────────── */
+@keyframes pulse-glow-teal {
+  0%, 100% { box-shadow: 0 0 12px rgba(56, 185, 172, 0.4); }
+  50%       { box-shadow: 0 0 24px rgba(56, 185, 172, 0.7); }
+}
+
+@keyframes pulse-glow-brick {
+  0%, 100% { box-shadow: 0 0 12px rgba(220, 85, 45, 0.4); }
+  50%       { box-shadow: 0 0 24px rgba(220, 85, 45, 0.7); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ── Scrollbar (dark themed) ──────────────────────────────────────── */
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: rgba(240,237,232,0.15); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover  { background: rgba(240,237,232,0.25); }

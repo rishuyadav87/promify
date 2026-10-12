@@ -5,15 +5,24 @@ import type {
   ReactNode,
 } from "react";
 
-type Variant = "primary" | "secondary" | "outline";
+type Variant = "primary" | "secondary" | "outline" | "ghost";
 
 const base =
-  "inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal focus-visible:ring-offset-stone disabled:pointer-events-none disabled:opacity-40 relative overflow-hidden";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-teal text-stone hover:bg-teal-hover active:bg-teal-hover",
-  secondary: "bg-brick text-stone hover:bg-brick-hover active:bg-brick-hover",
-  outline: "border border-ink/20 text-ink hover:bg-ink/5 active:bg-ink/10",
+  // Gradient fill with glow on hover
+  primary:
+    "bg-gradient-teal text-stone shadow-glow-sm hover:shadow-glow-teal hover:scale-[1.02] active:scale-[0.99] active:opacity-90",
+  // Brick gradient
+  secondary:
+    "bg-gradient-brick text-stone shadow-[0_0_8px_rgba(220,85,45,0.25)] hover:shadow-glow-brick hover:scale-[1.02] active:scale-[0.99] active:opacity-90",
+  // Glass outline
+  outline:
+    "border border-ink/20 text-ink bg-transparent hover:bg-ink/8 hover:border-ink/35 active:bg-ink/12 backdrop-blur-sm",
+  // Completely transparent
+  ghost:
+    "text-warmgray hover:text-ink hover:bg-ink/6 active:bg-ink/10",
 };
 
 type CommonProps = {

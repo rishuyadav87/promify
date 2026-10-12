@@ -37,19 +37,19 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
   }, [filtered]);
 
   const selectClasses =
-    "rounded-md border border-ink/20 bg-surface px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30";
+    "rounded-xl border border-ink/15 bg-surface/60 px-3.5 py-2 text-sm text-ink backdrop-blur-sm focus:border-teal/60 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-colors";
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <div className="relative flex-1 sm:min-w-[220px]">
+        <div className="relative flex-1 sm:min-w-[240px]">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-warmgray" />
           <input
             type="text"
             placeholder="Search by niche…"
             value={niche}
             onChange={(e) => setNiche(e.target.value)}
-            className="w-full rounded-md border border-ink/20 bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-warmgray focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
+            className="w-full rounded-xl border border-ink/15 bg-surface/60 py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-warmgray backdrop-blur-sm focus:border-teal/60 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-colors"
           />
         </div>
 
@@ -75,9 +75,11 @@ export function BrowseFilters({ creators }: { creators: CreatorProfile[] }) {
       </div>
 
       {grouped.length === 0 ? (
-        <p className="text-sm text-warmgray">
-          No creators match those filters.
-        </p>
+        <div className="rounded-2xl border border-ink/[0.08] bg-surface/40 p-8 text-center backdrop-blur-sm">
+          <p className="text-sm text-warmgray">
+            No creators match those filters. Try broadening your search.
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {grouped.map((platforms) => (

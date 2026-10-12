@@ -6,10 +6,6 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { createPaymentOrder, confirmPayment } from "@/lib/actions/payments";
 
-// Razorpay's checkout.js attaches itself to window.Razorpay once loaded --
-// there's no npm package needed for the browser side, matching how the
-// Instagram OAuth callback also talks to Instagram's API with plain fetch
-// rather than adding an SDK dependency (src/app/auth/callback/instagram).
 declare global {
   interface Window {
     Razorpay: new (options: Record<string, unknown>) => {
@@ -66,17 +62,13 @@ export function PaymentPanel({
           setError(confirmResult.error);
           setLoading(false);
         } else {
-          // Reload rather than router.refresh() so every panel on the
-          // page (PaymentPanel disappearing, ContentSubmissionPanel
-          // unlocking) re-reads the now-paid status from a fresh
-          // server render in one go.
           window.location.reload();
         }
       },
       modal: {
         ondismiss: () => setLoading(false),
       },
-      theme: { color: "#1B4A47" },
+      theme: { color: "#38B9AC" },
     });
 
     razorpay.on("payment.failed", () => {
@@ -93,30 +85,47 @@ export function PaymentPanel({
         src="https://checkout.razorpay.com/v1/checkout.js"
         onLoad={() => setScriptReady(true)}
       />
-      <Card className="flex flex-col gap-3">
-        <div>
-          <h2 className="text-base font-semibold text-ink">
+      <Card
+        className="flex flex-col gap-4 relative overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, rgba(10,42,39,0.5) 0%, rgba(14,12,11,0.8) 100%)",
+          border: "1px solid rgba(56,185,172,0.2)",
+        }}
+      >
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-semibold uppercase tracking-widest text-teal">
+            Secure Payment
+          </span>
+          <h2 className="font-display text-lg text-ink">
             Pay to start this campaign
           </h2>
-          <p className="mt-1 text-sm text-warmgray">
-            The creator can submit content once payment is confirmed.
+          <p className="text-sm text-warmgray">
+            Funds are held securely. The creator can submit content once payment is confirmed.
           </p>
         </div>
-        <p className="text-sm text-ink">
-          Amount:{" "}
-          <span className="font-semibold">
+
+        <div className="flex items-baseline justify-between border-y border-ink/[0.08] py-3">
+          <span className="text-sm text-warmgray">Total amount</span>
+          <span className="font-mono text-2xl font-bold text-gradient-teal">
             ₹{price.toLocaleString("en-IN")}
           </span>
-        </p>
+        </div>
+
         <Button
           type="button"
           variant="primary"
           disabled={!scriptReady || loading}
           onClick={handlePay}
+          className="w-full py-3 text-base"
         >
           {loading ? "Processing…" : `Pay ₹${price.toLocaleString("en-IN")}`}
         </Button>
-        {error && <p className="text-sm text-error">{error}</p>}
+
+        {error && (
+          <p className="rounded-xl border border-error/20 bg-error/10 px-3 py-2 text-sm text-error">
+            {error}
+          </p>
+        )}
       </Card>
     </>
   );

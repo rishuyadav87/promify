@@ -15,11 +15,14 @@ export default async function BrowseCreatorsPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">
-          Browse creators
+        <span className="text-xs font-semibold uppercase tracking-widest text-warmgray">
+          Browse
+        </span>
+        <h1 className="mt-1 font-display text-2xl text-ink">
+          Find your creators
         </h1>
         <p className="mt-1 text-sm text-warmgray">
-          Find a creator to invite to your next campaign.
+          Discover verified creators and invite them to your next campaign.
         </p>
       </div>
 
