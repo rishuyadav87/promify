@@ -16,9 +16,9 @@ export default async function HomePage() {
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute -top-32 -left-32 h-[600px] w-[600px] rounded-full bg-teal/10 blur-[120px] opacity-60" />
-        <div className="absolute top-1/3 -right-48 h-[500px] w-[500px] rounded-full bg-brick/10 blur-[120px] opacity-50" />
-        <div className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-teal/8 blur-[100px] opacity-40" />
+        <div className="absolute -top-32 -left-32 h-[600px] w-[600px] rounded-full bg-teal/10 blur-[120px] opacity-40 dark:opacity-60" />
+        <div className="absolute top-1/3 -right-48 h-[500px] w-[500px] rounded-full bg-brick/10 blur-[120px] opacity-30 dark:opacity-50" />
+        <div className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-teal/8 blur-[100px] opacity-30 dark:opacity-40" />
       </div>
 
       {/* ── Navigation ───────────────────────────────────────────── */}
@@ -31,7 +31,7 @@ export default async function HomePage() {
             height={48}
             className="h-10 w-10 drop-shadow-[0_0_8px_rgba(56,185,172,0.4)]"
           />
-          <span className="text-xl font-semibold tracking-tight text-white">
+          <span className="text-xl font-semibold tracking-tight text-ink">
             Juncture
           </span>
         </span>
@@ -56,25 +56,15 @@ export default async function HomePage() {
 
       <main className="relative z-10 mx-auto max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
         {/* ── Hero: Two Sides ──────────────────────────────────────── */}
-        <section className="mt-4 grid overflow-hidden rounded-3xl sm:grid-cols-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+        <section className="mt-4 grid overflow-hidden rounded-3xl sm:grid-cols-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
           {/* Creator side */}
           <div
             className="relative flex flex-col justify-between gap-8 overflow-hidden p-8 sm:p-12"
             style={{
               background:
-                "linear-gradient(145deg, #0a2a27 0%, #0e3a35 40%, #163d38 100%)",
+                "linear-gradient(145deg, #0d3834 0%, #164e48 40%, #1d615a 100%)",
             }}
           >
-            {/* Grain / texture overlay */}
-            <div
-              aria-hidden
-              className="absolute inset-0 opacity-25"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E\")",
-                backgroundSize: "150px 150px",
-              }}
-            />
             {/* Corner glow */}
             <div
               aria-hidden
@@ -82,17 +72,17 @@ export default async function HomePage() {
             />
 
             <div className="relative">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-teal/40 bg-[#0A2A27] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#4EE5D5]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-300/40 bg-teal-950/50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-teal-200">
                 For Creators
               </span>
               <h1 className="mt-4 font-display text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
                 Name your price.
                 <br />
-                <span className="text-[#38B9AC]">Get booked</span>
+                <span className="text-teal-300">Get booked</span>
                 <br />
                 on your terms.
               </h1>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-200 sm:text-base font-normal">
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-teal-50/90 sm:text-base font-normal">
                 List your Instagram or YouTube, get an automatic price
                 band from your following, and negotiate every offer
                 before you agree to anything.
@@ -103,7 +93,7 @@ export default async function HomePage() {
               <Button
                 href="/signup?role=creator"
                 variant="primary"
-                className="w-full justify-center py-3 text-base sm:w-auto sm:px-8 text-white font-semibold shadow-glow-teal"
+                className="w-full justify-center py-3 text-base sm:w-auto sm:px-8 shadow-glow-teal"
               >
                 Join as a creator
               </Button>
@@ -115,19 +105,9 @@ export default async function HomePage() {
             className="relative flex flex-col justify-between gap-8 overflow-hidden p-8 sm:p-12"
             style={{
               background:
-                "linear-gradient(145deg, #2a1008 0%, #3d1a0a 40%, #4a2010 100%)",
+                "linear-gradient(145deg, #3d170a 0%, #52210e 40%, #692c15 100%)",
             }}
           >
-            {/* Grain / texture overlay */}
-            <div
-              aria-hidden
-              className="absolute inset-0 opacity-25"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E\")",
-                backgroundSize: "150px 150px",
-              }}
-            />
             {/* Corner glow */}
             <div
               aria-hidden
@@ -135,17 +115,17 @@ export default async function HomePage() {
             />
 
             <div className="relative">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-brick/40 bg-[#34160C] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#FF8566]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-300/40 bg-orange-950/50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-200">
                 For Brands
               </span>
               <h1 className="mt-4 font-display text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
                 Book the right creator.
                 <br />
-                <span className="text-[#FF7A50]">Know exactly</span>
+                <span className="text-orange-300">Know exactly</span>
                 <br />
                 what you're getting.
               </h1>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-200 sm:text-base font-normal">
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-orange-50/90 sm:text-base font-normal">
                 Browse verified creators, send a clear brief with your
                 offer, and track every campaign from booking through to
                 delivery.
@@ -156,7 +136,7 @@ export default async function HomePage() {
               <Button
                 href="/signup?role=brand"
                 variant="secondary"
-                className="w-full justify-center py-3 text-base sm:w-auto sm:px-8 text-white font-semibold shadow-glow-brick"
+                className="w-full justify-center py-3 text-base sm:w-auto sm:px-8 shadow-glow-brick"
               >
                 Join as a brand
               </Button>
@@ -164,11 +144,11 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <p className="mt-6 text-center text-sm text-slate-300">
+        <p className="mt-6 text-center text-sm text-warmgray">
           Already have an account?{" "}
           <a
             href="/login"
-            className="font-semibold text-[#4EE5D5] hover:underline underline-offset-4 transition-colors"
+            className="font-semibold text-teal hover:underline underline-offset-4 transition-colors"
           >
             Log in
           </a>
@@ -178,17 +158,17 @@ export default async function HomePage() {
         <section className="mt-20 sm:mt-28">
           <div className="divider-gradient mb-16" />
           <div className="mb-12 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#38B9AC]">
+            <span className="text-xs font-bold uppercase tracking-widest text-teal">
               How it works
             </span>
-            <h2 className="mt-3 font-display text-3xl text-white sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
               Simple from start to finish
             </h2>
           </div>
           <div className="grid gap-12 md:grid-cols-2 md:gap-16">
             <div>
               <div className="mb-6 flex items-center gap-3">
-                <span className="rounded-full border border-teal/40 bg-[#0A2A27] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#4EE5D5]">
+                <span className="rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-teal-800 dark:border-teal-500/40 dark:bg-[#0A2A27] dark:text-[#4EE5D5]">
                   For creators
                 </span>
               </div>
@@ -228,7 +208,7 @@ export default async function HomePage() {
 
             <div>
               <div className="mb-6 flex items-center gap-3">
-                <span className="rounded-full border border-brick/40 bg-[#34160C] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#FF8566]">
+                <span className="rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-800 dark:border-orange-500/40 dark:bg-[#34160C] dark:text-[#FF8566]">
                   For brands
                 </span>
               </div>
@@ -272,13 +252,13 @@ export default async function HomePage() {
         <section className="mt-20 sm:mt-28">
           <div className="divider-gradient mb-16" />
           <div className="mb-10 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#FFD166]">
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-400">
               Pricing
             </span>
-            <h2 className="mt-3 font-display text-3xl text-white sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
               How pricing works
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-300">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-warmgray">
               Every creator's price band is calculated automatically from
               their follower count and platform — nobody has to guess what to
               charge or offer.
@@ -289,7 +269,7 @@ export default async function HomePage() {
             <PriceTierCard label="Micro" range="10,000–99,999 followers" price="₹2,000–₹15,000" accent="gold" />
             <PriceTierCard label="Mid-tier" range="100,000–499,999 followers" price="₹15,000–₹50,000" accent="brick" />
           </div>
-          <p className="mt-6 text-center text-xs text-slate-400 leading-relaxed max-w-3xl mx-auto">
+          <p className="mt-6 text-center text-xs text-warmgray leading-relaxed max-w-3xl mx-auto">
             Below 1,000 followers, a creator isn't yet eligible for a
             listing. Above 500,000, pricing is handled case-by-case.
             YouTube creators with monetization enabled get a higher band than the
@@ -301,24 +281,20 @@ export default async function HomePage() {
         <section className="mt-20 sm:mt-28">
           <div className="divider-gradient mb-16" />
           <div
-            className="relative overflow-hidden rounded-3xl p-8 sm:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-            style={{
-              background: "linear-gradient(135deg, #0f1a18 0%, #141210 100%)",
-              border: "1px solid rgba(240,237,232,0.1)",
-            }}
+            className="relative overflow-hidden rounded-3xl p-8 sm:p-12 border border-slate-200/90 bg-white shadow-sm dark:border-white/10 dark:bg-[#0f1a18] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
           >
             <div
               aria-hidden
               className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-teal/10 blur-[80px]"
             />
             <div className="relative">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#38B9AC]">
+              <span className="text-xs font-bold uppercase tracking-widest text-teal">
                 Dispute protection
               </span>
-              <h2 className="mt-3 font-display text-2xl text-white sm:text-3xl">
+              <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">
                 What happens if something goes wrong
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200">
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-warmgray">
                 Either the brand or the creator can report an issue on an
                 active campaign — a mismatched brief, a post that came down
                 early, or anything else that doesn't match what was agreed.
@@ -333,15 +309,15 @@ export default async function HomePage() {
       </main>
 
       {/* ── Footer ───────────────────────────────────────────────── */}
-      <footer className="relative z-10 mx-auto max-w-6xl border-t border-white/10 px-4 py-8 sm:px-6 lg:px-8">
+      <footer className="relative z-10 mx-auto max-w-6xl border-t border-slate-200/80 dark:border-white/10 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-sm text-slate-400">
+          <span className="flex items-center gap-2 text-sm text-warmgray">
             <Image src="/logo-icon.png" alt="" width={20} height={20} className="h-5 w-5 opacity-70" />
             Juncture
           </span>
           <a
             href="/privacy"
-            className="text-sm text-slate-400 hover:text-white transition-colors underline underline-offset-2"
+            className="text-sm text-warmgray hover:text-ink transition-colors underline underline-offset-2"
           >
             Privacy Policy
           </a>
@@ -364,42 +340,33 @@ function PriceTierCard({
 }) {
   const accentStyles = {
     teal: {
-      wrapper: "border-teal/30",
-      bg: "linear-gradient(145deg, #0a2a27 0%, #0f3035 100%)",
-      labelColor: "text-[#4EE5D5]",
-      priceColor: "text-[#38B9AC]",
-      glow: "0 0 24px rgba(56,185,172,0.15)",
+      wrapper:
+        "border-teal-200 bg-teal-50/60 dark:border-teal-500/30 dark:bg-[#0a2a27]/80 dark:shadow-[0_0_24px_rgba(56,185,172,0.15)]",
+      labelColor: "text-teal-800 dark:text-[#4EE5D5]",
     },
     brick: {
-      wrapper: "border-brick/30",
-      bg: "linear-gradient(145deg, #2a1008 0%, #351508 100%)",
-      labelColor: "text-[#FF8566]",
-      priceColor: "text-[#FF7A50]",
-      glow: "0 0 24px rgba(220,85,45,0.15)",
+      wrapper:
+        "border-orange-200 bg-orange-50/60 dark:border-orange-500/30 dark:bg-[#2a1008]/80 dark:shadow-[0_0_24px_rgba(220,85,45,0.15)]",
+      labelColor: "text-orange-800 dark:text-[#FF8566]",
     },
     gold: {
-      wrapper: "border-yellow-600/30",
-      bg: "linear-gradient(145deg, #1a1505 0%, #221a06 100%)",
-      labelColor: "text-yellow-400",
-      priceColor: "text-[#FFD166]",
-      glow: "0 0 24px rgba(201,151,58,0.15)",
+      wrapper:
+        "border-amber-200 bg-amber-50/60 dark:border-amber-500/30 dark:bg-[#1a1505]/80 dark:shadow-[0_0_24px_rgba(201,151,58,0.15)]",
+      labelColor: "text-amber-800 dark:text-[#FFD166]",
     },
   };
 
   const s = accentStyles[accent];
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-2xl border p-6 ${s.wrapper}`}
-      style={{ background: s.bg, boxShadow: s.glow }}
-    >
+    <div className={`relative overflow-hidden rounded-2xl border p-6 shadow-sm ${s.wrapper}`}>
       <p className={`text-xs font-bold uppercase tracking-widest ${s.labelColor}`}>
         {label}
       </p>
-      <p className={`mt-3 font-display text-2xl font-bold ${s.priceColor}`}>
+      <p className="mt-3 font-display text-2xl font-bold text-ink">
         {price}
       </p>
-      <p className="mt-2 text-xs text-slate-300 font-medium">{range}</p>
+      <p className="mt-2 text-xs text-warmgray font-medium">{range}</p>
     </div>
   );
 }
@@ -415,7 +382,11 @@ function Step({
   text: string;
   accent: "teal" | "brick";
 }) {
-  const numberColor = accent === "teal" ? "text-[#38B9AC]" : "text-[#FF7A50]";
+  const numberColor =
+    accent === "teal"
+      ? "text-teal-700 dark:text-[#38B9AC]"
+      : "text-orange-700 dark:text-[#FF8566]";
+
   return (
     <li className="flex gap-4 group">
       <span
@@ -424,8 +395,8 @@ function Step({
         {number}
       </span>
       <div>
-        <h3 className="text-base font-semibold text-white">{title}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-300 font-normal">{text}</p>
+        <h3 className="text-base font-semibold text-ink">{title}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-warmgray font-normal">{text}</p>
       </div>
     </li>
   );

@@ -3,38 +3,70 @@
 @tailwind utilities;
 
 /*
- * "Juncture Premium" palette — dark-first design system.
+ * "Juncture Premium" palette — supports both seamless Luxury Light mode
+ * and deep cinematic Dark mode.
  *
- * Philosophy: deep warm charcoal base, not pure black. Surfaces lift
- * via glass/blur rather than flat colour steps. Teal stays the primary
- * action colour; brick anchors the creator side. Both are brighter and
- * more saturated than before so gradients read properly on dark.
+ * Light mode: clean, porcelain off-white (#F8F7F4) with sharp dark text (#181715),
+ * crisp white cards (#FFFFFF), and jewel teal & terracotta accents.
  *
- * Values are R G B triplets (no commas) so Tailwind's <alpha-value>
- * opacity modifiers keep working in both modes.
+ * Dark mode: deep warm near-black charcoal (#0E0C0B) with bright text (#F8F9FA),
+ * elevated glass surfaces (#1C1916), and luminous glowing accents.
+ *
+ * Values are R G B triplets (no commas) for Tailwind <alpha-value> modifiers.
  */
-:root {
-  /* ── Core text & backgrounds ──────────────────────────────────── */
-  --color-ink:      248 249 250;   /* #F8F9FA — crisp bright text          */
-  --color-stone:     14  12  11;   /* #0E0C0B — page bg: warm near-black   */
-  --color-warmgray: 203 213 225;   /* #CBD5E1 — bright slate-300 for readable secondary text */
-  --color-surface:   28  25  22;   /* #1C1916 — card / elevated bg         */
-  --color-surface2:  38  34  29;   /* #26221D — slightly lighter surface   */
 
-  /* ── Brand accents ────────────────────────────────────────────── */
-  --color-brick:        220  85  45;  /* #DC552D — vibrant fired-clay       */
-  --color-brick-hover:  240 100  55;  /* #F06437                            */
-  --color-brick-subtle:  52  22  12;  /* #34160C — dark tinted surface      */
+/* ── Light mode (default & under .light) ────────────────────────── */
+:root,
+.light {
+  --color-ink:      24  23  21;   /* #181715 — rich dark text (crisp & high contrast) */
+  --color-stone:   248 247 244;   /* #F8F7F4 — luxurious porcelain/pearl light bg     */
+  --color-warmgray: 90  99 110;   /* #5A636E — readable slate-500 secondary text      */
+  --color-surface: 255 255 255;   /* #FFFFFF — crisp clean white card surfaces        */
+  --color-surface2: 243 244 246;  /* #F3F4F6 — secondary light surface               */
 
-  --color-teal:         56 185 172;  /* #38B9AC — bright jewel teal        */
-  --color-teal-hover:   80 210 196;  /* #50D2C4                            */
-  --color-teal-subtle:  10  42  39;  /* #0A2A27 — deep teal surface        */
+  --color-brick:       194  65  27;  /* #C2411B — vibrant rich terracotta   */
+  --color-brick-hover: 160  50  20;  /* #A03214                            */
+  --color-brick-subtle: 255 237 230; /* #FFEDE6 — soft coral tint          */
 
-  /* ── Semantic ──────────────────────────────────────────────────── */
+  --color-teal:         20 125 116;  /* #147D74 — deep jewel teal           */
+  --color-teal-hover:   15  99  92;  /* #0F635C                            */
+  --color-teal-subtle: 230 247 245;  /* #E6F7F5 — soft mint tint           */
+
+  --color-success:  22 101  52;   /* #166534 */
+  --color-error:   185  28  28;   /* #B91C1C */
+
+  --grad-teal-from:  #147D74;
+  --grad-teal-to:    #22B5A7;
+  --grad-brick-from: #C2411B;
+  --grad-brick-to:   #E55A32;
+  --grad-gold-from:  #B4821E;
+  --grad-gold-to:    #D9A838;
+
+  --background: #f8f7f4;
+  --foreground: #181715;
+
+  color-scheme: light;
+}
+
+/* ── Dark mode (under .dark) ────────────────────────────────────── */
+.dark {
+  --color-ink:      248 249 250;   /* #F8F9FA — crisp bright text                      */
+  --color-stone:     14  12  11;   /* #0E0C0B — deep charcoal page background          */
+  --color-warmgray: 203 213 225;   /* #CBD5E1 — bright slate-300 secondary text        */
+  --color-surface:   28  25  22;   /* #1C1916 — elevated glass surface                 */
+  --color-surface2:  38  34  29;   /* #26221D — secondary dark surface                 */
+
+  --color-brick:        220  85  45;  /* #DC552D — luminous fired-clay     */
+  --color-brick-hover:  240 100  55;  /* #F06437                           */
+  --color-brick-subtle:  52  22  12;  /* #34160C — deep terracotta surface */
+
+  --color-teal:         56 185 172;  /* #38B9AC — bright jewel teal       */
+  --color-teal-hover:   80 210 196;  /* #50D2C4                           */
+  --color-teal-subtle:  10  42  39;  /* #0A2A27 — deep teal surface       */
+
   --color-success:  88 195 130;   /* #58C382 */
   --color-error:   220  95  80;   /* #DC5F50 */
 
-  /* ── Gradient stops (used in CSS & via bg-[] utilities) ──────── */
   --grad-teal-from:  #1a9e94;
   --grad-teal-to:    #38B9AC;
   --grad-brick-from: #b8360e;
@@ -43,37 +75,9 @@
   --grad-gold-to:    #e8c56a;
 
   --background: #0e0c0b;
-  --foreground: #f0ede8;
+  --foreground: #f8f9fa;
 
   color-scheme: dark;
-}
-
-/*
- * Light mode still works — kept minimal so it's usable if the user
- * has forced light mode, but the designed experience is dark.
- */
-.light {
-  --color-ink:      32  29  26;
-  --color-stone:   237 231 221;
-  --color-warmgray: 138 132 120;
-  --color-surface:  255 255 255;
-  --color-surface2: 245 242 238;
-
-  --color-brick:       168  57  31;
-  --color-brick-hover: 143  47  26;
-  --color-brick-subtle: 240 222 213;
-
-  --color-teal:        27  74  71;
-  --color-teal-hover:  20  55  53;
-  --color-teal-subtle: 220 232 231;
-
-  --color-success:  61 122  84;
-  --color-error:   176  70  58;
-
-  --background: #ede7dd;
-  --foreground: #201d1a;
-
-  color-scheme: light;
 }
 
 /* ── Base styles ──────────────────────────────────────────────────── */
@@ -81,8 +85,8 @@ body {
   color: var(--foreground);
   background: var(--background);
   transition:
-    background-color 150ms ease,
-    color 150ms ease;
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 /* Headings use the display face globally */
@@ -119,48 +123,28 @@ h1, h2, h3, h4 {
 
   /* Background gradients */
   .bg-gradient-teal {
-    background: linear-gradient(135deg, #0a2a27 0%, #0f3d38 50%, #1a5c55 100%);
+    background: linear-gradient(135deg, #147D74 0%, #1e9e93 100%);
   }
 
   .bg-gradient-brick {
-    background: linear-gradient(135deg, #2a1008 0%, #3d1a0a 50%, #5c2510 100%);
-  }
-
-  .bg-gradient-premium {
-    background: linear-gradient(135deg, #0e0c0b 0%, #141210 40%, #0f1a18 100%);
+    background: linear-gradient(135deg, #C2411B 0%, #E55A32 100%);
   }
 
   /* Glassmorphism card */
   .glass-card {
-    background: rgba(28, 25, 22, 0.7);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .glass-card {
+    background: rgba(28, 25, 22, 0.75);
     border: 1px solid rgba(240, 237, 232, 0.08);
     box-shadow:
       0 4px 24px rgba(0, 0, 0, 0.4),
       inset 0 1px 0 rgba(240, 237, 232, 0.06);
-  }
-
-  .glass-card-teal {
-    background: rgba(10, 42, 39, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(56, 185, 172, 0.2);
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(56, 185, 172, 0.05),
-      inset 0 1px 0 rgba(56, 185, 172, 0.1);
-  }
-
-  .glass-card-brick {
-    background: rgba(42, 16, 8, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(220, 85, 45, 0.2);
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(220, 85, 45, 0.05),
-      inset 0 1px 0 rgba(220, 85, 45, 0.1);
   }
 
   /* Glow effects */
@@ -172,66 +156,20 @@ h1, h2, h3, h4 {
     box-shadow: 0 0 20px rgba(220, 85, 45, 0.3), 0 0 60px rgba(220, 85, 45, 0.1);
   }
 
-  /* Ambient background orbs (decorative blobs) */
-  .orb-teal {
-    position: absolute;
-    border-radius: 9999px;
-    background: radial-gradient(circle, rgba(56, 185, 172, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-    filter: blur(40px);
-  }
-
-  .orb-brick {
-    position: absolute;
-    border-radius: 9999px;
-    background: radial-gradient(circle, rgba(220, 85, 45, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-    filter: blur(40px);
-  }
-
-  /* Gradient borders via pseudo-element approach */
-  .border-gradient-teal {
-    position: relative;
-    background: clip-padding;
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
   /* Premium divider */
   .divider-gradient {
     height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(20, 125, 116, 0.25), transparent);
+  }
+
+  .dark .divider-gradient {
     background: linear-gradient(90deg, transparent, rgba(56, 185, 172, 0.3), transparent);
   }
-
-  /* Subtle grain texture for hero sections */
-  .grain-overlay::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
 }
 
-/* ── Premium button glow animations ──────────────────────────────── */
-@keyframes pulse-glow-teal {
-  0%, 100% { box-shadow: 0 0 12px rgba(56, 185, 172, 0.4); }
-  50%       { box-shadow: 0 0 24px rgba(56, 185, 172, 0.7); }
-}
-
-@keyframes pulse-glow-brick {
-  0%, 100% { box-shadow: 0 0 12px rgba(220, 85, 45, 0.4); }
-  50%       { box-shadow: 0 0 24px rgba(220, 85, 45, 0.7); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
-/* ── Scrollbar (dark themed) ──────────────────────────────────────── */
+/* ── Scrollbars ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar              { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track        { background: transparent; }
-::-webkit-scrollbar-thumb        { background: rgba(240,237,232,0.15); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover  { background: rgba(240,237,232,0.25); }
+::-webkit-scrollbar-thumb        { background: rgba(100, 116, 139, 0.25); border-radius: 9999px; }
+.dark ::-webkit-scrollbar-thumb   { background: rgba(240, 237, 232, 0.15); }
+::-webkit-scrollbar-thumb:hover  { background: rgba(100, 116, 139, 0.4); }

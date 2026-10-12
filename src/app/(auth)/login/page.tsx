@@ -24,9 +24,6 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  // Separate from `error` -- this case needs a different UI (a resend
-  // link, not just red text), so it's tracked as its own piece of state
-  // rather than trying to detect it by string-matching error.message.
   const [unconfirmedEmail, setUnconfirmedEmail] = useState(false);
   const [resendState, setResendState] = useState<
     "idle" | "sending" | "sent"
@@ -45,10 +42,6 @@ function LoginForm() {
     });
 
     if (error) {
-      // error.code is the stable identifier Supabase documents for this
-      // case ('email_not_confirmed') -- error.message is human-readable
-      // text meant for display, not for branching logic on, since its
-      // exact wording isn't guaranteed to stay the same across versions.
       if (error.code === "email_not_confirmed") {
         setUnconfirmedEmail(true);
       } else {
@@ -58,17 +51,6 @@ function LoginForm() {
       return;
     }
 
-    // A hard navigation here (not router.push) is intentional. router.push
-    // does a soft client-side transition, which can serve an already-cached
-    // "logged out" version of /dashboard from before this sign-in, since
-    // Next.js prefetches routes in the background. That caused the
-    // "have to log in twice" symptom: first submit set the session cookie
-    // correctly, but the dashboard's redirect check ran against stale
-    // cached content and bounced back to /login; the second submit then
-    // "worked" only because the cache had caught up by then.
-    // window.location.href forces a full reload straight through
-    // middleware.ts with the fresh cookie, avoiding the stale cache
-    // entirely.
     window.location.href = "/dashboard";
   }
 
@@ -81,9 +63,6 @@ function LoginForm() {
         emailRedirectTo: `${window.location.origin}/auth/callback/oauth-signin`,
       },
     });
-    // Resend errors (rate limit, invalid email) aren't worth a separate
-    // error state here -- falling back to "idle" just lets the person
-    // press the button again, which is the same recovery either way.
     setResendState(error ? "idle" : "sent");
   }
 
@@ -92,9 +71,6 @@ function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        // No ?role= param here -- this is the login page, an existing
-        // user's role is already decided. That param only matters on the
-        // signup page's Google button.
         redirectTo: `${window.location.origin}/auth/callback/oauth-signin`,
       },
     });
@@ -123,14 +99,7 @@ function LoginForm() {
 
         {/* Card */}
         <div
-          className="flex flex-col gap-6 rounded-2xl p-7 sm:p-8"
-          style={{
-            background: "rgba(28,25,22,0.75)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(240,237,232,0.08)",
-            boxShadow: "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(240,237,232,0.05)",
-          }}
+          className="flex flex-col gap-6 rounded-2xl p-7 sm:p-8 border border-slate-200/90 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:border-white/[0.08] dark:bg-surface/75 dark:shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           <div>
             <h1 className="font-display text-2xl text-ink">Welcome back</h1>
@@ -138,7 +107,7 @@ function LoginForm() {
           </div>
 
           {searchParams.get("reset") === "success" && (
-            <p className="rounded-xl border border-teal/20 bg-teal-subtle/60 px-4 py-3 text-sm text-teal">
+            <p className="rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800 dark:border-teal/20 dark:bg-teal-subtle/60 dark:text-teal">
               Password updated — log in with your new password.
             </p>
           )}
@@ -154,14 +123,14 @@ function LoginForm() {
           </Button>
 
           <div className="flex items-center gap-3">
-            <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(240,237,232,0.12))" }} />
+            <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
             <span className="text-xs text-warmgray">or</span>
-            <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(240,237,232,0.12), transparent)" }} />
+            <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="text-sm font-medium text-ink/80">
+              <label htmlFor="email" className="text-sm font-medium text-ink">
                 Email
               </label>
               <input
@@ -172,14 +141,14 @@ function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="rounded-xl border border-ink/15 bg-surface/60 px-3.5 py-2.5 text-sm text-ink placeholder:text-warmgray focus:border-teal/60 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-colors"
+                className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20 dark:border-ink/15 dark:bg-surface/60 dark:text-ink dark:placeholder:text-warmgray transition-colors"
                 placeholder="you@example.com"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium text-ink/80">
+                <label htmlFor="password" className="text-sm font-medium text-ink">
                   Password
                 </label>
                 <a

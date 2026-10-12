@@ -11,12 +11,8 @@ export function Card({
 }) {
   return (
     <div
-      className={`w-full rounded-2xl border border-ink/[0.08] bg-surface/70 p-6 shadow-card backdrop-blur-xl sm:p-8 ${className}`}
-      style={{
-        boxShadow:
-          "0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(240,237,232,0.05)",
-        ...style,
-      }}
+      className={`w-full rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-surface/70 dark:shadow-card sm:p-8 ${className}`}
+      style={style}
     >
       {children}
     </div>

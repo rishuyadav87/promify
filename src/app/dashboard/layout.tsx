@@ -27,18 +27,13 @@ export default async function DashboardLayout({
         aria-hidden
         className="pointer-events-none fixed inset-0 overflow-hidden"
       >
-        <div className="absolute -top-64 -left-64 h-[700px] w-[700px] rounded-full bg-teal/8 blur-[160px]" />
-        <div className="absolute top-1/2 -right-64 h-[500px] w-[500px] rounded-full bg-brick/6 blur-[140px]" />
+        <div className="absolute -top-64 -left-64 h-[700px] w-[700px] rounded-full bg-teal/10 blur-[160px] opacity-40 dark:opacity-60" />
+        <div className="absolute top-1/2 -right-64 h-[500px] w-[500px] rounded-full bg-brick/8 blur-[140px] opacity-30 dark:opacity-50" />
       </div>
 
-      {/* ── Sticky header ─────────────────────────────────────────── */}
+      {/* ── Sticky header (adapts to light & dark mode) ───────────── */}
       <header
-        className="sticky top-0 z-20 border-b border-ink/[0.07]"
-        style={{
-          background: "rgba(14,12,11,0.85)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-        }}
+        className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-white/[0.08] dark:bg-[#0E0C0B]/85"
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
           <Link
